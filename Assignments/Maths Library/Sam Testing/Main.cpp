@@ -56,15 +56,13 @@ void TEST(const char* msg, T& a, T& b) {
 void main()
 {
 
-	Matrix2 m2;
-	m2.setRotateZ(4.576f);
+	Vector3 v3a = Vector3(13.5f, -48.23f, 862); Vector3 v3b = Vector3(5, 3.99f, -12);
+	Vector3 v3c = v3a.cross(v3b);
+	Vector4 v4a = Vector4(13.5f, -48.23f, 862, 0); Vector4  v4b = Vector4(5, 3.99f, -12, 1);
+	Vector4 v4c = v4a.cross(v4b);
 
-	Matrix2 m2b, m2c;
-	m2b.setRotateZ(-2.145f);
-	m2c = m2 * m2b;
-
-	TEST("Matrix2 rotate", m2, Matrix2(-0.135966f, -0.990713f, 0.990713f, -0.135966f));
-	TEST("Matrix2 multiply", m2c, Matrix2(-0.757975637913f, 0.652282953262f, -0.652282953262f, -0.757975637913f));
+	TEST("Vector3 cross", v3c, Vector3(-2860.62011719f, 295.014984131f, 295.014984131f));
+	TEST("Vector4 cross", v4c, Vector4(-2860.62011719f, 295.014984131f, 295.014984131f, 0));
 
 	system("pause");
 }
