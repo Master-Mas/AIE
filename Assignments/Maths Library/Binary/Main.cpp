@@ -1,6 +1,9 @@
 #include "Main.h"
 
+void main()
+{
 
+}
 
 Main::Main()
 {
@@ -8,10 +11,6 @@ Main::Main()
 
 
 Main::~Main()
-{
-}
-
-void Main::main()
 {
 }
 

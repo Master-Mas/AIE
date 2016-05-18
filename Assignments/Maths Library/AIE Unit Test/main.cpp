@@ -1,4 +1,3 @@
-// an example main function for the unit test
 #include "unittest.h"
 #include <iostream>
 
@@ -10,7 +9,7 @@ int main() {
 		return -1;
 	}
 	std::cout << "All tests passed successfully." << std::endl;
-	system("pause");
 
+	system("pause");
 	return 0;
 }

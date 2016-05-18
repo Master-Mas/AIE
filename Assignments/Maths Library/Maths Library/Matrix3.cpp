@@ -78,15 +78,15 @@ Matrix3::~Matrix3()
 void Matrix3::setRotateX(float x)
 {
 	matrixData[1][1] = cosf(x);
-	matrixData[2][1] = sinf(x);
-	matrixData[1][2] = asinf(x);
+	matrixData[2][1] = asinf(x);
+	matrixData[1][2] = sinf(x);
 	matrixData[2][2] = cosf(x);
 }
 
 void Matrix3::setRotateY(float y)
 {
 	matrixData[0][0] = cosf(y);
-	matrixData[2][0] = asinf(y);
+	matrixData[2][0] = sinf(y);
 	matrixData[0][2] = sinf(y);
 	matrixData[2][2] = cosf(y);
 }
