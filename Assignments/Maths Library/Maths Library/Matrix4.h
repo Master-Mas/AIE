@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <iostream>
 
 class Matrix4
 {
@@ -14,8 +15,6 @@ public:
 	void setRotateX(float x);
 	void setRotateY(float y);
 	void setRotateZ(float z);
-	void setValue(int index, float value);
-	float getValue(int index);
 
 	Matrix4& operator* (const Matrix4 & otherMatrix);
 	friend Matrix4& operator* (const Matrix4 & firstMatrix, const Matrix4 & secondMatrix);
@@ -24,7 +23,6 @@ public:
 	operator float*();
 
 private:
-	//[Column][Row]
 	float matrixData[4][4] = { {1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,0,1} };
 };
 

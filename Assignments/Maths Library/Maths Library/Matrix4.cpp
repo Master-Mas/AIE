@@ -70,46 +70,31 @@ void Matrix4::setRotateZ(float z)
 	matrixData[1][1] = cosf(z);
 }
 
-void Matrix4::setValue(int index, float value)
-{
-	if (index > 0 && index < 16)
-	{
-		matrixData[index / 4][index % 4] = value;
-	}
-	else
-	{
-		throw std::out_of_range("Matrix4 setValue outside of range");
-	}
-}
-
-float Matrix4::getValue(int index)
-{
-	if (index > 0 && index < 16)
-	{
-		return matrixData[index / 4][index % 4];
-	}
-	else
-	{
-		throw std::out_of_range("Matrix4 setValue outside of range");
-	}
-}
-
 Matrix4& Matrix4::operator*(const Matrix4 & otherMatrix)
 {
-	Matrix4* temp = new Matrix4();
+	Matrix4 temp = Matrix4();
 
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int ii = 0; ii < 4; ++ii)
-		{
-			for (int iii = 0; iii < 4; ++iii)
-			{
-				temp->matrixData[i][ii] += matrixData[i][iii] * otherMatrix.matrixData[iii][ii];
-			}
-		}
-	}
+	temp.matrixData[0][0] = (matrixData[0][0] * otherMatrix.matrixData[0][0]) + (matrixData[1][0] * otherMatrix.matrixData[0][1]) + (matrixData[2][0] * otherMatrix.matrixData[0][2]) + (matrixData[3][0] * otherMatrix.matrixData[0][3]);
+	temp.matrixData[0][1] = (matrixData[0][1] * otherMatrix.matrixData[0][0]) + (matrixData[1][1] * otherMatrix.matrixData[0][1]) + (matrixData[2][1] * otherMatrix.matrixData[0][2]) + (matrixData[3][1] * otherMatrix.matrixData[0][3]);
+	temp.matrixData[0][2] = (matrixData[0][2] * otherMatrix.matrixData[0][0]) + (matrixData[1][2] * otherMatrix.matrixData[0][1]) + (matrixData[2][2] * otherMatrix.matrixData[0][2]) + (matrixData[3][2] * otherMatrix.matrixData[0][3]);
+	temp.matrixData[0][3] = (matrixData[0][3] * otherMatrix.matrixData[0][0]) + (matrixData[1][3] * otherMatrix.matrixData[0][1]) + (matrixData[2][3] * otherMatrix.matrixData[0][2]) + (matrixData[3][3] * otherMatrix.matrixData[0][3]);
 
-	return *temp;
+	temp.matrixData[1][0] = (matrixData[0][0] * otherMatrix.matrixData[1][0]) + (matrixData[1][0] * otherMatrix.matrixData[1][1]) + (matrixData[2][0] * otherMatrix.matrixData[1][2]) + (matrixData[3][0] * otherMatrix.matrixData[1][3]);
+	temp.matrixData[1][1] = (matrixData[0][1] * otherMatrix.matrixData[1][0]) + (matrixData[1][1] * otherMatrix.matrixData[1][1]) + (matrixData[2][1] * otherMatrix.matrixData[1][2]) + (matrixData[3][1] * otherMatrix.matrixData[1][3]);
+	temp.matrixData[1][2] = (matrixData[0][2] * otherMatrix.matrixData[1][0]) + (matrixData[1][2] * otherMatrix.matrixData[1][1]) + (matrixData[2][2] * otherMatrix.matrixData[1][2]) + (matrixData[3][2] * otherMatrix.matrixData[1][3]);
+	temp.matrixData[1][3] = (matrixData[0][3] * otherMatrix.matrixData[1][0]) + (matrixData[1][3] * otherMatrix.matrixData[1][1]) + (matrixData[2][3] * otherMatrix.matrixData[1][2]) + (matrixData[3][3] * otherMatrix.matrixData[1][3]);
+
+	temp.matrixData[2][0] = (matrixData[0][0] * otherMatrix.matrixData[2][0]) + (matrixData[1][0] * otherMatrix.matrixData[2][1]) + (matrixData[2][0] * otherMatrix.matrixData[2][2]) + (matrixData[3][0] * otherMatrix.matrixData[2][3]);
+	temp.matrixData[2][1] = (matrixData[0][1] * otherMatrix.matrixData[2][0]) + (matrixData[1][1] * otherMatrix.matrixData[2][1]) + (matrixData[2][1] * otherMatrix.matrixData[2][2]) + (matrixData[3][1] * otherMatrix.matrixData[2][3]);
+	temp.matrixData[2][2] = (matrixData[0][2] * otherMatrix.matrixData[2][0]) + (matrixData[1][2] * otherMatrix.matrixData[2][1]) + (matrixData[2][2] * otherMatrix.matrixData[2][2]) + (matrixData[3][2] * otherMatrix.matrixData[2][3]);
+	temp.matrixData[2][3] = (matrixData[0][3] * otherMatrix.matrixData[2][0]) + (matrixData[1][3] * otherMatrix.matrixData[2][1]) + (matrixData[2][3] * otherMatrix.matrixData[2][2]) + (matrixData[3][3] * otherMatrix.matrixData[2][3]);
+
+	temp.matrixData[3][0] = (matrixData[0][0] * otherMatrix.matrixData[3][0]) + (matrixData[1][0] * otherMatrix.matrixData[3][1]) + (matrixData[2][0] * otherMatrix.matrixData[3][2]) + (matrixData[3][0] * otherMatrix.matrixData[3][3]);
+	temp.matrixData[3][1] = (matrixData[0][1] * otherMatrix.matrixData[3][0]) + (matrixData[1][1] * otherMatrix.matrixData[3][1]) + (matrixData[2][1] * otherMatrix.matrixData[3][2]) + (matrixData[3][1] * otherMatrix.matrixData[3][3]);
+	temp.matrixData[3][2] = (matrixData[0][2] * otherMatrix.matrixData[3][0]) + (matrixData[1][2] * otherMatrix.matrixData[3][1]) + (matrixData[2][2] * otherMatrix.matrixData[3][2]) + (matrixData[3][2] * otherMatrix.matrixData[3][3]);
+	temp.matrixData[3][3] = (matrixData[0][3] * otherMatrix.matrixData[3][0]) + (matrixData[1][3] * otherMatrix.matrixData[3][1]) + (matrixData[2][3] * otherMatrix.matrixData[3][2]) + (matrixData[3][3] * otherMatrix.matrixData[3][3]);
+
+	return temp;
 }
 
 float Matrix4::operator[](int i)
@@ -141,16 +126,25 @@ Matrix4& operator*(const Matrix4 & firstMatrix, const Matrix4 & secondMatrix)
 {
 	Matrix4 temp = Matrix4();
 
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int ii = 0; ii < 4; ++ii)
-		{
-			for (int iii = 0; iii < 4; ++iii)
-			{
-				temp.matrixData[i][ii] += firstMatrix.matrixData[i][iii] * secondMatrix.matrixData[iii][ii];
-			}
-		}
-	}
+	temp.matrixData[0][0] = (firstMatrix.matrixData[0][0] * secondMatrix.matrixData[0][0]) + (firstMatrix.matrixData[1][0] * secondMatrix.matrixData[0][1]) + (firstMatrix.matrixData[2][0] * secondMatrix.matrixData[0][2]) + (firstMatrix.matrixData[3][0] * secondMatrix.matrixData[0][3]);
+	temp.matrixData[0][1] = (firstMatrix.matrixData[0][1] * secondMatrix.matrixData[0][0]) + (firstMatrix.matrixData[1][1] * secondMatrix.matrixData[0][1]) + (firstMatrix.matrixData[2][1] * secondMatrix.matrixData[0][2]) + (firstMatrix.matrixData[3][1] * secondMatrix.matrixData[0][3]);
+	temp.matrixData[0][2] = (firstMatrix.matrixData[0][2] * secondMatrix.matrixData[0][0]) + (firstMatrix.matrixData[1][2] * secondMatrix.matrixData[0][1]) + (firstMatrix.matrixData[2][2] * secondMatrix.matrixData[0][2]) + (firstMatrix.matrixData[3][2] * secondMatrix.matrixData[0][3]);
+	temp.matrixData[0][3] = (firstMatrix.matrixData[0][3] * secondMatrix.matrixData[0][0]) + (firstMatrix.matrixData[1][3] * secondMatrix.matrixData[0][1]) + (firstMatrix.matrixData[2][3] * secondMatrix.matrixData[0][2]) + (firstMatrix.matrixData[3][3] * secondMatrix.matrixData[0][3]);
+
+	temp.matrixData[1][0] = (firstMatrix.matrixData[0][0] * secondMatrix.matrixData[1][0]) + (firstMatrix.matrixData[1][0] * secondMatrix.matrixData[1][1]) + (firstMatrix.matrixData[2][0] * secondMatrix.matrixData[1][2]) + (firstMatrix.matrixData[3][0] * secondMatrix.matrixData[1][3]);
+	temp.matrixData[1][1] = (firstMatrix.matrixData[0][1] * secondMatrix.matrixData[1][0]) + (firstMatrix.matrixData[1][1] * secondMatrix.matrixData[1][1]) + (firstMatrix.matrixData[2][1] * secondMatrix.matrixData[1][2]) + (firstMatrix.matrixData[3][1] * secondMatrix.matrixData[1][3]);
+	temp.matrixData[1][2] = (firstMatrix.matrixData[0][2] * secondMatrix.matrixData[1][0]) + (firstMatrix.matrixData[1][2] * secondMatrix.matrixData[1][1]) + (firstMatrix.matrixData[2][2] * secondMatrix.matrixData[1][2]) + (firstMatrix.matrixData[3][2] * secondMatrix.matrixData[1][3]);
+	temp.matrixData[1][3] = (firstMatrix.matrixData[0][3] * secondMatrix.matrixData[1][0]) + (firstMatrix.matrixData[1][3] * secondMatrix.matrixData[1][1]) + (firstMatrix.matrixData[2][3] * secondMatrix.matrixData[1][2]) + (firstMatrix.matrixData[3][3] * secondMatrix.matrixData[1][3]);
+
+	temp.matrixData[2][0] = (firstMatrix.matrixData[0][0] * secondMatrix.matrixData[2][0]) + (firstMatrix.matrixData[1][0] * secondMatrix.matrixData[2][1]) + (firstMatrix.matrixData[2][0] * secondMatrix.matrixData[2][2]) + (firstMatrix.matrixData[3][0] * secondMatrix.matrixData[2][3]);
+	temp.matrixData[2][1] = (firstMatrix.matrixData[0][1] * secondMatrix.matrixData[2][0]) + (firstMatrix.matrixData[1][1] * secondMatrix.matrixData[2][1]) + (firstMatrix.matrixData[2][1] * secondMatrix.matrixData[2][2]) + (firstMatrix.matrixData[3][1] * secondMatrix.matrixData[2][3]);
+	temp.matrixData[2][2] = (firstMatrix.matrixData[0][2] * secondMatrix.matrixData[2][0]) + (firstMatrix.matrixData[1][2] * secondMatrix.matrixData[2][1]) + (firstMatrix.matrixData[2][2] * secondMatrix.matrixData[2][2]) + (firstMatrix.matrixData[3][2] * secondMatrix.matrixData[2][3]);
+	temp.matrixData[2][3] = (firstMatrix.matrixData[0][3] * secondMatrix.matrixData[2][0]) + (firstMatrix.matrixData[1][3] * secondMatrix.matrixData[2][1]) + (firstMatrix.matrixData[2][3] * secondMatrix.matrixData[2][2]) + (firstMatrix.matrixData[3][3] * secondMatrix.matrixData[2][3]);
+
+	temp.matrixData[3][0] = (firstMatrix.matrixData[0][0] * secondMatrix.matrixData[3][0]) + (firstMatrix.matrixData[1][0] * secondMatrix.matrixData[3][1]) + (firstMatrix.matrixData[2][0] * secondMatrix.matrixData[3][2]) + (firstMatrix.matrixData[3][0] * secondMatrix.matrixData[3][3]);
+	temp.matrixData[3][1] = (firstMatrix.matrixData[0][1] * secondMatrix.matrixData[3][0]) + (firstMatrix.matrixData[1][1] * secondMatrix.matrixData[3][1]) + (firstMatrix.matrixData[2][1] * secondMatrix.matrixData[3][2]) + (firstMatrix.matrixData[3][1] * secondMatrix.matrixData[3][3]);
+	temp.matrixData[3][2] = (firstMatrix.matrixData[0][2] * secondMatrix.matrixData[3][0]) + (firstMatrix.matrixData[1][2] * secondMatrix.matrixData[3][1]) + (firstMatrix.matrixData[2][2] * secondMatrix.matrixData[3][2]) + (firstMatrix.matrixData[3][2] * secondMatrix.matrixData[3][3]);
+	temp.matrixData[3][3] = (firstMatrix.matrixData[0][3] * secondMatrix.matrixData[3][0]) + (firstMatrix.matrixData[1][3] * secondMatrix.matrixData[3][1]) + (firstMatrix.matrixData[2][3] * secondMatrix.matrixData[3][2]) + (firstMatrix.matrixData[3][3] * secondMatrix.matrixData[3][3]);
 
 	return temp;
 }
