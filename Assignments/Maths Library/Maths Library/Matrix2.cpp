@@ -1,12 +1,7 @@
 #include "Matrix2.h"
 
-
-
 Matrix2::Matrix2()
 {
-	matrixData = new float*[2];
-	matrixData[0] = new float[2];
-	matrixData[1] = new float[2];
 
 	matrixData[0][0] = 1;
 	matrixData[0][1] = 0;
@@ -14,16 +9,8 @@ Matrix2::Matrix2()
 	matrixData[1][1] = 1;
 }
 
-
-// [ x, z ]
-// [ y, a ]
 Matrix2::Matrix2(float x, float y, float z, float a)
 {
-	matrixData = new float*[2];
-	for (int i = 0; i < 2; i++)
-	{
-		matrixData[i] = new float[2];
-	}
 
 	matrixData[0][0] = x;
 	matrixData[0][1] = y;
@@ -33,10 +20,6 @@ Matrix2::Matrix2(float x, float y, float z, float a)
 
 Matrix2::Matrix2(const Matrix2 & copy)
 {
-	matrixData = new float*[2];
-	matrixData[0] = new float[2];
-	matrixData[1] = new float[2];
-
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int ii = 0; ii < 2; ++ii)
@@ -49,24 +32,14 @@ Matrix2::Matrix2(const Matrix2 & copy)
 
 Matrix2::~Matrix2()
 {
-	if (matrixData != nullptr)
-	{
-		for (int i = 0; i < 2; i++)
-		{
-			delete[] matrixData[i];
-		}
-		
-		delete[] matrixData;
-
-		matrixData = nullptr;
-	}
+	
 }
 
 void Matrix2::setRotateX(float x)
 {
 	matrixData[0][0] = cosf(x);
 	matrixData[0][1] = sinf(x);
-	matrixData[1][0] = asinf(x);
+	matrixData[1][0] = -sinf(x);
 	matrixData[1][1] = cosf(x);
 }
 
@@ -74,7 +47,7 @@ void Matrix2::setRotateZ(float z)
 {
 	matrixData[0][0] = cosf(z);
 	matrixData[0][1] = sinf(z);
-	matrixData[1][0] = asinf(z);
+	matrixData[1][0] = -sinf(z);
 	matrixData[1][1] = cosf(z);
 }
 
@@ -104,20 +77,14 @@ float Matrix2::getValue(int index)
 
 Matrix2& Matrix2::operator*(const Matrix2 & otherMatrix)
 {
-	Matrix2* temp = new Matrix2();
+	Matrix2 temp = Matrix2();
 
-	for (int i = 0; i < 2; ++i)
-	{
-		for (int ii = 0; ii < 2; ++ii)
-		{
-			for (int iii = 0; iii < 2; ++iii)
-			{
-				temp->matrixData[i][ii] += matrixData[i][iii] * otherMatrix.matrixData[iii][ii];
-			}
-		}
-	}
+	//temp.matrixData[0][0] = (matrixData[0][0] * otherMatrix.matrixData[0][0]) + (matrixData[0][1] * otherMatrix.matrixData[1][0]);
+	//temp.matrixData[0][1] = (matrixData[0][0] * otherMatrix.matrixData[0][1]) + (matrixData[0][1] * otherMatrix.matrixData[1][1]);
+	//temp.matrixData[1][0] = (matrixData[1][0] * otherMatrix.matrixData[0][0]) + (matrixData[1][1] * otherMatrix.matrixData[1][0]);
+	//temp.matrixData[1][1] = (matrixData[1][0] * otherMatrix.matrixData[0][1]) + (matrixData[1][1] * otherMatrix.matrixData[1][1]);
 
-	return *temp;
+	return temp;
 }
 
 float Matrix2::operator[](int i)

@@ -115,10 +115,10 @@ Vector4 & operator*(Matrix4 & otherMatrix, const Vector4 & otherVector)
 	float* matrix = (float*)otherMatrix;
 
 	return Vector4(
-		matrix[0] * otherVector.x + matrix[4] * otherVector.x + matrix[8] * otherVector.x + matrix[12] * otherVector.x,
-		matrix[1] * otherVector.y + matrix[5] * otherVector.y + matrix[9] * otherVector.y + matrix[13] * otherVector.y,
-		matrix[2] * otherVector.z + matrix[6] * otherVector.z + matrix[10] * otherVector.z + matrix[14] * otherVector.z,
-		matrix[3] * otherVector.a + matrix[7] * otherVector.a + matrix[11] * otherVector.a + matrix[15] * otherVector.a);
+		matrix[0] * otherVector.x + matrix[4] * otherVector.y + matrix[8] * otherVector.z + matrix[12] * otherVector.a,
+		matrix[1] * otherVector.x + matrix[5] * otherVector.y + matrix[9] * otherVector.z + matrix[13] * otherVector.a,
+		matrix[2] * otherVector.x + matrix[6] * otherVector.y + matrix[10] * otherVector.z + matrix[14] * otherVector.a,
+		matrix[3] * otherVector.x + matrix[7] * otherVector.y + matrix[11] * otherVector.z + matrix[15] * otherVector.a);
 }
 
 Vector4 & Vector4::operator*(Matrix4 & otherMatrix)

@@ -110,9 +110,9 @@ Vector3 & operator*(Matrix3 & otherMatrix, const Vector3 & otherVector)
 	float* matrix = (float*)otherMatrix;
 
 	return Vector3(
-		matrix[0] * otherVector.x + matrix[3] * otherVector.x + matrix[6] * otherVector.x,
-		matrix[1] * otherVector.y + matrix[4] * otherVector.y + matrix[7] * otherVector.y,
-		matrix[2] * otherVector.z + matrix[5] * otherVector.z + matrix[8] * otherVector.z);
+		matrix[0] * otherVector.x + matrix[3] * otherVector.y + matrix[6] * otherVector.z,
+		matrix[1] * otherVector.x + matrix[4] * otherVector.y + matrix[7] * otherVector.z,
+		matrix[2] * otherVector.x + matrix[5] * otherVector.y + matrix[8] * otherVector.z);
 }
 
 Vector3 & Vector3::operator*(Matrix3 & otherMatrix)
@@ -120,9 +120,9 @@ Vector3 & Vector3::operator*(Matrix3 & otherMatrix)
 	float* matrix = (float*)otherMatrix;
 
 	return Vector3(
-		matrix[0] * x + matrix[3] * x + matrix[6] * x,
-		matrix[1] * y + matrix[4] * y + matrix[7] * y,
-		matrix[2] * z + matrix[5] * z + matrix[8] * z);
+		matrix[0] * x + matrix[3] * y + matrix[6] * z,
+		matrix[1] * x + matrix[4] * y + matrix[7] * z,
+		matrix[2] * x + matrix[5] * y + matrix[8] * z);
 }
 
 Vector3::operator float*()

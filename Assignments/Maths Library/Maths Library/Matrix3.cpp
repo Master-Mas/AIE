@@ -4,32 +4,11 @@
 
 Matrix3::Matrix3()
 {
-	matrixData = new float*[3];
-	for (int i = 0; i < 3; ++i)
-	{
-		matrixData[i] = new float[3];
-	}
 
-	matrixData[0][0] = 1;
-	matrixData[0][1] = 0;
-	matrixData[0][2] = 0;
-
-	matrixData[1][0] = 0;
-	matrixData[1][1] = 1;
-	matrixData[1][2] = 0;
-
-	matrixData[2][0] = 0;
-	matrixData[2][1] = 0;
-	matrixData[2][2] = 1;
 }
 
 Matrix3::Matrix3(float x, float y, float z, float w, float v, float u, float t, float s, float r)
 {
-	matrixData = new float*[3];
-	for (int i = 0; i < 3; i++)
-	{
-		matrixData[i] = new float[3];
-	}
 
 	matrixData[0][0] = x;
 	matrixData[0][1] = y;
@@ -46,10 +25,6 @@ Matrix3::Matrix3(float x, float y, float z, float w, float v, float u, float t, 
 
 Matrix3::Matrix3(const Matrix3 & copy)
 {
-	matrixData = new float*[3];
-	matrixData[0] = new float[3];
-	matrixData[1] = new float[3];
-
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int ii = 0; ii < 3; ++ii)
@@ -62,23 +37,12 @@ Matrix3::Matrix3(const Matrix3 & copy)
 
 Matrix3::~Matrix3()
 {
-	if (matrixData != nullptr)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			delete[] matrixData[i];
-		}
-
-		delete[] matrixData;
-
-		matrixData = nullptr;
-	}
 }
 
 void Matrix3::setRotateX(float x)
 {
 	matrixData[1][1] = cosf(x);
-	matrixData[2][1] = asinf(x);
+	matrixData[2][1] = -sinf(x);
 	matrixData[1][2] = sinf(x);
 	matrixData[2][2] = cosf(x);
 }
@@ -86,15 +50,15 @@ void Matrix3::setRotateX(float x)
 void Matrix3::setRotateY(float y)
 {
 	matrixData[0][0] = cosf(y);
+	matrixData[0][2] = -sinf(y);
 	matrixData[2][0] = sinf(y);
-	matrixData[0][2] = sinf(y);
 	matrixData[2][2] = cosf(y);
 }
 
 void Matrix3::setRotateZ(float z)
 {
 	matrixData[0][0] = cosf(z);
-	matrixData[1][0] = asinf(z);
+	matrixData[1][0] = -sinf(z);
 	matrixData[0][1] = sinf(z);
 	matrixData[1][1] = cosf(z);
 }

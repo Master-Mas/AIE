@@ -25,6 +25,6 @@ public:
 
 private:
 	//[Column][Row]
-	float** matrixData;
+	float matrixData[4][4] = { {1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,0,1} };
 };
 

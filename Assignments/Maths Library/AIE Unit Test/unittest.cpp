@@ -236,13 +236,13 @@ bool runUnitTests() {
 	m3c.setRotateZ(9.62f);
 	m4c.setRotateZ(0.72f);
 
-	TEST("Matrix2 set rotate", m2, Matrix2(-0.135966f, -0.990713f, 0.990713f, -0.135966f));
-	TEST("Matrix3 set rotate", m3a, Matrix3(1, 0, 0, 0, -0.668648f, -0.743579f, 0, 0.743579f, -0.668648f));
-	TEST("Matrix3 set rotate", m3b, Matrix3(-0.188077f, 0, -0.982154f, 0, 1, 0, 0.982154f, 0, -0.188077f));
-	TEST("Matrix3 set rotate", m3c, Matrix3(-0.981005f, -0.193984f, 0, 0.193984f, -0.981005f, 0, 0, 0, 1));
-	TEST("Matrix4 set rotate", m4a, Matrix4(1, 0, 0, 0, 0, -0.210796f, -0.97753f, 0, 0, 0.97753f, -0.210796f, 0, 0, 0, 0, 1));
-	TEST("Matrix4 set rotate", m4b, Matrix4(-0.856889f, 0, 0.515501f, 0, 0, 1, 0, 0, -0.515501f, 0, -0.856889f, 0, 0, 0, 0, 1));
-	TEST("Matrix4 set rotate", m4c, Matrix4(0.751806f, 0.659385f, 0, 0, -0.659385f, 0.751806f, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
+	TEST("Matrix2 set rotate Z", m2, Matrix2(-0.135966f, -0.990713f, 0.990713f, -0.135966f));
+	TEST("Matrix3 set rotate X", m3a, Matrix3(1, 0, 0, 0, -0.668648f, -0.743579f, 0, 0.743579f, -0.668648f));
+	TEST("Matrix3 set rotate Y", m3b, Matrix3(-0.188077f, 0, -0.982154f, 0, 1, 0, 0.982154f, 0, -0.188077f));
+	TEST("Matrix3 set rotate Z", m3c, Matrix3(-0.981005f, -0.193984f, 0, 0.193984f, -0.981005f, 0, 0, 0, 1));
+	TEST("Matrix4 set rotate X", m4a, Matrix4(1, 0, 0, 0, 0, -0.210796f, -0.97753f, 0, 0, 0.97753f, -0.210796f, 0, 0, 0, 0, 1));
+	TEST("Matrix4 set rotate Y", m4b, Matrix4(-0.856889f, 0, 0.515501f, 0, 0, 1, 0, 0, -0.515501f, 0, -0.856889f, 0, 0, 0, 0, 1));
+	TEST("Matrix4 set rotate Z", m4c, Matrix4(0.751806f, 0.659385f, 0, 0, -0.659385f, 0.751806f, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
 
 	// vector transform
 	v2a = Vector2(13.5f, -48.23f);

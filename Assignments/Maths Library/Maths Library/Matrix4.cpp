@@ -1,43 +1,11 @@
 #include "Matrix4.h"
 
-
-
 Matrix4::Matrix4()
 {
-	matrixData = new float*[4];
-	for (int i = 0; i < 4; ++i)
-	{
-		matrixData[i] = new float[4];
-	}
-
-	matrixData[0][0] = 1;
-	matrixData[0][1] = 0;
-	matrixData[0][2] = 0;
-	matrixData[0][3] = 0;
-
-	matrixData[1][0] = 0;
-	matrixData[1][1] = 1;
-	matrixData[1][2] = 0;
-	matrixData[1][3] = 0;
-
-	matrixData[2][0] = 0;
-	matrixData[2][1] = 0;
-	matrixData[2][2] = 1;
-	matrixData[2][3] = 0;
-
-	matrixData[3][0] = 0;
-	matrixData[3][1] = 0;
-	matrixData[3][2] = 0;
-	matrixData[3][3] = 1;
 }
 
 Matrix4::Matrix4(float x, float y, float z, float w, float v, float u, float t, float s, float r, float q, float p, float o, float n, float m, float l, float k)
 {
-	matrixData = new float*[4];
-	for (int i = 0; i < 4; i++)
-	{
-		matrixData[i] = new float[4];
-	}
 
 	matrixData[0][0] = x;
 	matrixData[0][1] = y;
@@ -63,9 +31,6 @@ Matrix4::Matrix4(float x, float y, float z, float w, float v, float u, float t, 
 
 Matrix4::Matrix4(const Matrix4 & copy)
 {
-	matrixData = new float*[4];
-	matrixData[0] = new float[4];
-	matrixData[1] = new float[4];
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -79,39 +44,28 @@ Matrix4::Matrix4(const Matrix4 & copy)
 
 Matrix4::~Matrix4()
 {
-	if (matrixData != nullptr)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			delete[] matrixData[i];
-		}
-
-		delete[] matrixData;
-
-		matrixData = nullptr;
-	}
 }
 
 void Matrix4::setRotateX(float x)
 {
 	matrixData[1][1] = cosf(x);
-	matrixData[2][1] = sinf(x);
-	matrixData[1][2] = asinf(x);
+	matrixData[2][1] = -sinf(x);
+	matrixData[1][2] = sinf(x);
 	matrixData[2][2] = cosf(x);
 }
 
 void Matrix4::setRotateY(float y)
 {
 	matrixData[0][0] = cosf(y);
-	matrixData[2][0] = asinf(y);
-	matrixData[0][2] = sinf(y);
+	matrixData[0][2] = -sinf(y);
+	matrixData[2][0] = sinf(y);
 	matrixData[2][2] = cosf(y);
 }
 
 void Matrix4::setRotateZ(float z)
 {
 	matrixData[0][0] = cosf(z);
-	matrixData[1][0] = asinf(z);
+	matrixData[1][0] = -sinf(z);
 	matrixData[0][1] = sinf(z);
 	matrixData[1][1] = cosf(z);
 }

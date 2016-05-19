@@ -82,8 +82,8 @@ Vector2 & operator*(Matrix2 & otherMatrix, const Vector2 & otherVector)
 	float* matrix = (float*)otherMatrix;
 
 	return Vector2(
-		matrix[0] * otherVector.x + matrix[2] * otherVector.x,
-		matrix[1] * otherVector.y + matrix[3] * otherVector.y);
+		(matrix[0] * otherVector.x) + (matrix[2] * otherVector.y),
+		(matrix[1] * otherVector.x) + (matrix[3] * otherVector.y));
 }
 
 Vector2& Vector2::operator*(Matrix2 & otherMatrix)
@@ -91,8 +91,8 @@ Vector2& Vector2::operator*(Matrix2 & otherMatrix)
 	float* matrix = (float*)otherMatrix;
 
 	return Vector2(
-		matrix[0] * x + matrix[2] * x,
-		matrix[1] * y + matrix[3] * y);
+		matrix[0] * x + matrix[2] * y,
+		matrix[1] * x + matrix[3] * y);
 }
 
 Vector2::operator float*()

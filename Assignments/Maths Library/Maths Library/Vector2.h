@@ -7,6 +7,7 @@
 #include <math.h>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include "Matrix2.h"
 
 class Vector2
