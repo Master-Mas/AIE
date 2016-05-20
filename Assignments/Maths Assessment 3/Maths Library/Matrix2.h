@@ -1,5 +1,5 @@
 #pragma once
-#include <stdexcept>
+#include "Vector2.h"
 
 class Matrix2
 {
@@ -12,17 +12,31 @@ public:
 
 	void setRotateX(float x);
 	void setRotateZ(float z);
-	void setValue(int index, float value);
-	float getValue(int index);
 
+	void setPosition(Vector2 otherVectors);
+	void setPosition(float x, float y);
+
+	void setScale(Vector2 otherVector);
+	void setScale(float x, float y);
+
+	Matrix2& transpose();
+
+	//Matrix Maths
 	Matrix2& operator* (const Matrix2 & otherMatrix);
 	friend Matrix2& operator* (const Matrix2 & firstMatrix, const Matrix2 & secondMatrix);
-	float operator[] (int i);
 
+	//Vector Maths
+	Vector2& operator* (Vector2 & otherVector);
+	friend Vector2& operator* (const Vector2 & otherVector, Matrix2 & otherMatrix);
+
+	//Casts and Accessors
+	float operator[] (int i);
 	operator float*();
 
+	//Maths Ops
+	void operator+=(const Vector2 & otherVector);
+
 private:
-	//[Column][Row]
 	float matrixData[2][2] = { {1,0}, {0,1} };
 };
 

@@ -4,11 +4,10 @@
 // Brief:			A Maths Vector2 Class
 ////////////////////////////////////////////////////////////
 
+#pragma once
 #include <math.h>
 #include <string>
 #include <sstream>
-#include <iostream>
-#include "Matrix2.h"
 
 class Vector2
 {
@@ -18,6 +17,9 @@ public:
 	* A Vector2 that is all 0. Static for quick access
 	*/
 	static const Vector2 ZERO;
+
+	float x = 0;
+	float y = 0;
 
 	/**
 	* Default Constructor
@@ -131,10 +133,6 @@ public:
 	*/
 	friend Vector2 operator* (float number, const Vector2 & otherVec);
 
-	Vector2& operator* (Matrix2 & otherMatrix);
-
-	friend Vector2& operator* (Matrix2 & otherMatrix, const Vector2 & otherVector);
-
 	/**
 	* Allows you to cast the Vector2 and get all the axis of the Vector in a float[]
 	* @return float* Returns the starting element of an array of all the axis 
@@ -158,8 +156,5 @@ public:
 	* @return string The string respresentation of the Vector2
 	*/
 	std::string toString() const;
-private:
-	float x = 0;
-	float y = 0;
 };
 

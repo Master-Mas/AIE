@@ -110,28 +110,6 @@ Vector4 operator*(float number, const Vector4 & otherVec)
 	return Vector4(otherVec.x * number, otherVec.y * number, otherVec.z * number, otherVec.a * number);
 }
 
-Vector4 & operator*(Matrix4 & otherMatrix, const Vector4 & otherVector)
-{
-	float* matrix = (float*)otherMatrix;
-
-	return Vector4(
-		matrix[0] * otherVector.x + matrix[4] * otherVector.y + matrix[8] * otherVector.z + matrix[12] * otherVector.a,
-		matrix[1] * otherVector.x + matrix[5] * otherVector.y + matrix[9] * otherVector.z + matrix[13] * otherVector.a,
-		matrix[2] * otherVector.x + matrix[6] * otherVector.y + matrix[10] * otherVector.z + matrix[14] * otherVector.a,
-		matrix[3] * otherVector.x + matrix[7] * otherVector.y + matrix[11] * otherVector.z + matrix[15] * otherVector.a);
-}
-
-Vector4 & Vector4::operator*(Matrix4 & otherMatrix)
-{
-	float* matrix = (float*)otherMatrix;
-
-	return Vector4(
-		matrix[0] * x + matrix[4] * x + matrix[8] * x + matrix[12] * x,
-		matrix[1] * y + matrix[5] * y + matrix[9] * y + matrix[13] * y,
-		matrix[2] * z + matrix[6] * z + matrix[10] * z + matrix[14] * z,
-		matrix[3] * a + matrix[7] * a + matrix[11] * a + matrix[15] * a);
-}
-
 Vector4::operator float*()
 {
 	float data[4] = { x, y, z, a };

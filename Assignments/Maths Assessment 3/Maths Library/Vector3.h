@@ -4,10 +4,10 @@
 // Brief:			A Maths Vector2 Class
 ////////////////////////////////////////////////////////////
 
+#pragma once
 #include <math.h>
 #include <string>
 #include <sstream>
-#include "Matrix3.h"
 
 class Vector3
 {
@@ -20,6 +20,10 @@ public:
 	static const Vector3 TOP;
 	static const Vector3 BOTTOM;
 	static const Vector3 ONE;
+
+	float x = 0;
+	float y = 0;
+	float z = 0;
 
 	Vector3();
 	Vector3(const float otherX, const float otherY, const float otherZ);
@@ -42,15 +46,9 @@ public:
 	Vector3 operator- (const Vector3 otherVec) const;
 	Vector3 operator* (float number);
 	friend Vector3 operator* (float number, const Vector3 & otherVec);
-	Vector3& operator* (Matrix3 & otherMatrix);
-	friend Vector3& operator* (Matrix3 & otherMatrix, const Vector3 & otherVector);
 	operator float*();
 	bool operator!= (const Vector3 otherVec) const;
 	bool operator== (const Vector3 otherVec) const;
 
 	const std::string toString() const;
-private:
-	float x = 0;
-	float y = 0;
-	float z = 0;
 };

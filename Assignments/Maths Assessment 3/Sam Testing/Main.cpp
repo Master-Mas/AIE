@@ -1,8 +1,4 @@
 #include <iostream>
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "Matrix2.h"
 #include "Main.h"
 
 static const float DEFAULT_TOLERANCE = 0.00001f;

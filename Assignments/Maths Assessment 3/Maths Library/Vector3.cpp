@@ -105,26 +105,6 @@ Vector3 operator*(float number, const Vector3 & otherVec)
 	return Vector3(otherVec.x * number, otherVec.y * number, otherVec.z * number);
 }
 
-Vector3 & operator*(Matrix3 & otherMatrix, const Vector3 & otherVector)
-{
-	float* matrix = (float*)otherMatrix;
-
-	return Vector3(
-		matrix[0] * otherVector.x + matrix[3] * otherVector.y + matrix[6] * otherVector.z,
-		matrix[1] * otherVector.x + matrix[4] * otherVector.y + matrix[7] * otherVector.z,
-		matrix[2] * otherVector.x + matrix[5] * otherVector.y + matrix[8] * otherVector.z);
-}
-
-Vector3 & Vector3::operator*(Matrix3 & otherMatrix)
-{
-	float* matrix = (float*)otherMatrix;
-
-	return Vector3(
-		matrix[0] * x + matrix[3] * y + matrix[6] * z,
-		matrix[1] * x + matrix[4] * y + matrix[7] * z,
-		matrix[2] * x + matrix[5] * y + matrix[8] * z);
-}
-
 Vector3::operator float*()
 {
 	float data[3] = { x, y, z };

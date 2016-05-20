@@ -4,15 +4,20 @@
 // Brief:			A Maths Vector2 Class
 ////////////////////////////////////////////////////////////
 
+#pragma once
 #include <math.h>
 #include <string>
 #include <sstream>
-#include "Matrix4.h"
 
 class Vector4
 {
 public:
 	static const Vector4 ZERO;
+
+	float x = 0;
+	float y = 0;
+	float z = 0;
+	float a = 0;
 
 	Vector4();
 	Vector4(const float otherX, const float otherY, const float otherZ, const float otherA);
@@ -37,17 +42,10 @@ public:
 	Vector4 operator- (const Vector4 otherVec) const;
 	Vector4 operator* (float number);
 	friend Vector4 operator* (float number, const Vector4 & otherVec);
-	Vector4& operator* (Matrix4 & otherMatrix);
-	friend Vector4& operator* (Matrix4 & otherMatrix, const Vector4 & otherVector);
 	operator float*();
 	bool operator!= (const Vector4 otherVec) const;
 	bool operator== (const Vector4 otherVec) const;
 
 	std::string toString() const;
-private:
-	float x = 0;
-	float y = 0;
-	float z = 0;
-	float a = 0;
 };
 

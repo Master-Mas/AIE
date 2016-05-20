@@ -4,14 +4,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AIEOpenGL", "AIEOpenGL.vcxproj", "{63494F4E-79FA-48AD-AA6C-BDF1FF1619FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0B58655-F503-4F92-8A97-0EA5A14158F0} = {E0B58655-F503-4F92-8A97-0EA5A14158F0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AIE Unit Test", "..\AIE Unit Test\AIE Unit Test.vcxproj", "{48933FB5-5DAC-404C-8B4A-CA90BC688E48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0B58655-F503-4F92-8A97-0EA5A14158F0} = {E0B58655-F503-4F92-8A97-0EA5A14158F0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Binary", "..\Binary\Binary.vcxproj", "{F73CF668-96D4-4E46-BEFD-252E4F48717D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Maths Library", "..\Maths Library\Maths Library.vcxproj", "{E0B58655-F503-4F92-8A97-0EA5A14158F0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sam Testing", "..\Sam Testing\Sam Testing.vcxproj", "{8919F16A-0011-4D6D-A854-C39412C3D935}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0B58655-F503-4F92-8A97-0EA5A14158F0} = {E0B58655-F503-4F92-8A97-0EA5A14158F0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

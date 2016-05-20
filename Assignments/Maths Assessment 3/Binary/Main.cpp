@@ -1,16 +1,5 @@
 #include "Main.h"
 
-void main()
-{
-	Main main;
-
-	uint32_t test = 10000001000000000000;
-
-	std::cout << std::boolalpha << main.IsLeftMostBitSet(test) << "\n";
-
-	system("pause");
-}
-
 Main::Main()
 {
 }
@@ -32,12 +21,12 @@ bool Main::IsRightMostBitSet(unsigned int value)
 
 bool Main::IsBitSet(unsigned int value, unsigned char bit_to_check)
 {
-	return (value & bit_to_check) != 0;
+	return (value & bit_to_check);
 }
 
-int Main::GetRightMostSetBit(unsigned int value)
+unsigned Main::GetRightMostSetBit(int value)
 {
-	return (value << 0) & 1;
+	return log2(value&-value);
 }
 
 void Main::PrintBinary(unsigned char value)
@@ -46,14 +35,26 @@ void Main::PrintBinary(unsigned char value)
 	{
 		(value & i) ? printf("1") : printf("0");
 	}
+
+	printf("\n");
 }
 
 bool Main::IsPowerOf2(unsigned int value)
 {
-	while (((value % 2) == 0) && value > 1)
-	{
-		value /= 2;
-	}
+	return value << 2;
+}
 
-	return (value == 1);
+void main()
+{
+	Main main;
+
+	int test = 01010000;
+
+	std::cout << main.GetRightMostSetBit(test) << "\n";
+
+	std::cout << std::boolalpha << main.IsBitSet(00000001, '1') << "\n";
+
+	main.PrintBinary('b');
+
+	system("pause");
 }
