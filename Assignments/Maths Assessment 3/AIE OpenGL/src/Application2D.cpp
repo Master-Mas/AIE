@@ -28,7 +28,7 @@ bool Application2D::startup()
 	m_spriteBatch = new SpriteBatch();
 
 	m_ball = new Texture("./bin/textures/ball.png");
-	m_bat1 = new Texture("./bin/textures/bat1.png");
+	m_bat1 = new Texture("./bin/textures/crate.png");
 	m_bat2 = new Texture("./bin/textures/bat2.png");
 
 	transforms = new Matrix3[3];
@@ -103,6 +103,10 @@ void Application2D::draw() {
 
 	// begin drawing sprites
 	m_spriteBatch->begin();
+
+
+
+	//std::cout << ((float*)transforms[0])[6] << ", " << ((float*)transforms[0])[7] << ", " << ((float*)transforms[0])[8] << std::endl;
 
 	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)transforms[0]);
 	/*m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
