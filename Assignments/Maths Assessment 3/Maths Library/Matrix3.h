@@ -30,6 +30,7 @@ public:
 	//Matrix Maths
 	Matrix3& operator* (const Matrix3 & otherMatrix);
 	friend Matrix3& operator* (const Matrix3 & firstMatrix, const Matrix3 & secondMatrix);
+	void operator*= (const Matrix3 & otherMatrix);
 
 	//Vector Maths
 	Vector3& operator* (Vector3 & otherVector);

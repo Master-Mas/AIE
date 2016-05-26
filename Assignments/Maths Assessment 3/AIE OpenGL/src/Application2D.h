@@ -27,5 +27,11 @@ private:
 	Texture* m_bat2;
 	Texture* m_ball;
 
-	Matrix3* transforms;
+	Matrix3** transforms;
+
+	float batMoveSpeed = 200;
+	float ballMoveSpeed = 400;
+	Vector2* ballDir = new Vector2();
+
+	void resetBall();
 };

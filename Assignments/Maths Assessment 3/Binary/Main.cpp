@@ -21,38 +21,48 @@ bool Main::IsRightMostBitSet(unsigned int value)
 
 bool Main::IsBitSet(unsigned int value, unsigned char bit_to_check)
 {
-	return (value & bit_to_check);
+	return (value & (1 << bit_to_check));
 }
 
-unsigned Main::GetRightMostSetBit(int value)
+int Main::GetRightMostSetBit(unsigned value)
 {
-	return log2(value&-value);
+	for (int i = 0; i < 32; ++i)
+	{
+		if (IsBitSet(value, i))
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 void Main::PrintBinary(unsigned char value)
 {
-	for (unsigned i = 1 << 31; i > 0; i = i / 2)
-	{
-		(value & i) ? printf("1") : printf("0");
-	}
-
-	printf("\n");
+	std::bitset<8> x(value);
+	std::cout << x << "\n";
 }
 
 bool Main::IsPowerOf2(unsigned int value)
 {
-	return value << 2;
+	return ((value != 0) && !(value & (value - 1)));
 }
 
 void main()
 {
 	Main main;
 
-	int test = 01010000;
-
+	unsigned test = 0b00000001;
 	std::cout << main.GetRightMostSetBit(test) << "\n";
 
-	std::cout << std::boolalpha << main.IsBitSet(00000001, '1') << "\n";
+	test = 0b10011100;
+	std::cout << main.GetRightMostSetBit(test) << "\n";
+
+	test = 0b01010000;
+	std::cout << main.GetRightMostSetBit(test) << "\n";
+
+	test = 0b00000000;
+	std::cout << main.GetRightMostSetBit(test) << "\n";
 
 	main.PrintBinary('b');
 

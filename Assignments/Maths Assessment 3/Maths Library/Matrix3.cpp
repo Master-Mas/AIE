@@ -152,6 +152,35 @@ Matrix3& Matrix3::operator*(const Matrix3 & otherMatrix)
 	return temp;
 }
 
+void Matrix3::operator*=(const Matrix3 & otherMatrix)
+{
+	Matrix3 temp = Matrix3();
+
+	temp.matrixData[0][0] = (matrixData[0][0] * otherMatrix.matrixData[0][0]) + (matrixData[1][0] * otherMatrix.matrixData[0][1]) + (matrixData[2][0] * otherMatrix.matrixData[0][2]);
+	temp.matrixData[0][1] = (matrixData[0][1] * otherMatrix.matrixData[0][0]) + (matrixData[1][1] * otherMatrix.matrixData[0][1]) + (matrixData[2][1] * otherMatrix.matrixData[0][2]);
+	temp.matrixData[0][2] = (matrixData[0][2] * otherMatrix.matrixData[0][0]) + (matrixData[1][2] * otherMatrix.matrixData[0][1]) + (matrixData[2][2] * otherMatrix.matrixData[0][2]);
+
+	temp.matrixData[1][0] = (matrixData[0][0] * otherMatrix.matrixData[1][0]) + (matrixData[1][0] * otherMatrix.matrixData[1][1]) + (matrixData[2][0] * otherMatrix.matrixData[1][2]);
+	temp.matrixData[1][1] = (matrixData[0][1] * otherMatrix.matrixData[1][0]) + (matrixData[1][1] * otherMatrix.matrixData[1][1]) + (matrixData[2][1] * otherMatrix.matrixData[1][2]);
+	temp.matrixData[1][2] = (matrixData[0][2] * otherMatrix.matrixData[1][0]) + (matrixData[1][2] * otherMatrix.matrixData[1][1]) + (matrixData[2][2] * otherMatrix.matrixData[1][2]);
+
+	temp.matrixData[2][0] = (matrixData[0][0] * otherMatrix.matrixData[2][0]) + (matrixData[1][0] * otherMatrix.matrixData[2][1]) + (matrixData[2][0] * otherMatrix.matrixData[2][2]);
+	temp.matrixData[2][1] = (matrixData[0][1] * otherMatrix.matrixData[2][0]) + (matrixData[1][1] * otherMatrix.matrixData[2][1]) + (matrixData[2][1] * otherMatrix.matrixData[2][2]);
+	temp.matrixData[2][2] = (matrixData[0][2] * otherMatrix.matrixData[2][0]) + (matrixData[1][2] * otherMatrix.matrixData[2][1]) + (matrixData[2][2] * otherMatrix.matrixData[2][2]);
+
+	matrixData[0][0] = temp.matrixData[0][0];
+	matrixData[0][1] = temp.matrixData[0][1];
+	matrixData[0][2] = temp.matrixData[0][2];
+
+	matrixData[1][0] = temp.matrixData[1][0];
+	matrixData[1][1] = temp.matrixData[1][1];
+	matrixData[1][2] = temp.matrixData[1][2];
+
+	matrixData[2][0] = temp.matrixData[2][0];
+	matrixData[2][1] = temp.matrixData[2][1];
+	matrixData[2][2] = temp.matrixData[2][2];
+}
+
 Matrix3& operator*(const Matrix3 & firstMatrix, const Matrix3 & secondMatrix)
 {
 	Matrix3 temp = Matrix3();

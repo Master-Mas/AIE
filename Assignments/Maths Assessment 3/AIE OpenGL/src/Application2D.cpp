@@ -6,18 +6,17 @@
 #include "Font.h"
 
 #include <iostream>
+#include <cstdlib>
+#include <time.h>
 
 Application2D::Application2D() 
 {
-
+	srand(time(NULL));
 }
 
 Application2D::~Application2D() 
 {
-	/*for (int i = 0; i < 3; ++i)
-	{
-		delete transforms[i];
-	}*/
+	
 }
 
 bool Application2D::startup() 
@@ -28,20 +27,21 @@ bool Application2D::startup()
 	m_spriteBatch = new SpriteBatch();
 
 	m_ball = new Texture("./bin/textures/ball.png");
-	m_bat1 = new Texture("./bin/textures/crate.png");
+	m_bat1 = new Texture("./bin/textures/bat1.png");
 	m_bat2 = new Texture("./bin/textures/bat2.png");
 
-	transforms = new Matrix3[3];
+	transforms = new Matrix3*[3];
 
-	transforms[0] = Matrix3();
-	transforms[0].setScale(1, 1);
-	transforms[0].setPosition(Vector2(100, 100));
+	transforms[0] = new Matrix3();
+	transforms[0]->setPosition(Vector2(32, (720 / 2) - 64));
 
-	/*transforms[1] = Matrix3();
-	transforms[1].setPosition(Vector2(1280 - 32, (720 / 2) - 32));
+	transforms[1] = new Matrix3();
+	transforms[1]->setPosition(Vector2(1280 - 32, (720 / 2) - 64));
 
-	transforms[2] = Matrix3();
-	transforms[2].setPosition(Vector2(0, (720 / 2) - 32));*/
+	transforms[2] = new Matrix3();
+	transforms[2]->setPosition(Vector2((1280 / 2) - 16, (720 / 2) - 16));
+
+	resetBall();
 
 	return true;
 }
@@ -54,64 +54,108 @@ void Application2D::shutdown()
 	delete m_bat2;
 	delete m_ball;
 
+	for (int i = 0; i < 3; i++)
+	{
+		delete transforms[i];
+	}
+
 	delete[] transforms;
+	delete ballDir;
 
 	destroyWindow();
 }
 
 bool Application2D::update(float deltaTime) {
 	
-	// close the application if the window closes or we press escape
 	if (hasWindowClosed() || isKeyPressed(GLFW_KEY_ESCAPE))
 		return false;
 
-	Vector2 vel = Vector2();
-
-	if (isKeyPressed(GLFW_KEY_A))
-	{
-		vel.x -= 50 * deltaTime;
-	}
-
-	if (isKeyPressed(GLFW_KEY_D))
-	{
-		vel.x += 50 * deltaTime;
-	}
+	Vector2 velBat1 = Vector2();
+	Vector2 velBat2 = Vector2();
 
 	if (isKeyPressed(GLFW_KEY_W))
 	{
-		vel.y += 50 * deltaTime;
+		velBat1.y += batMoveSpeed * deltaTime;
 	}
 
 	if (isKeyPressed(GLFW_KEY_S))
 	{
-		vel.y -= 50 * deltaTime;
+		velBat1.y -= batMoveSpeed * deltaTime;
 	}
 
-	std::cout << vel.toString() << std::endl;
+	if (isKeyPressed(GLFW_KEY_UP))
+	{
+		velBat2.y += batMoveSpeed * deltaTime;
+	}
 
-	/*float* matrixData = (float*)matrix;
-	matrix->setPosition(Vector2(matrixData[6], matrixData[7]) + vel);*/
+	if (isKeyPressed(GLFW_KEY_DOWN))
+	{
+		velBat2.y -= batMoveSpeed * deltaTime;
+	}
 
-	// the applciation closes if we return false
+	float* bat1Pos = (float*)transforms[0];
+	float* bat2Pos = (float*)transforms[1];
+
+	float* ballPos = (float*)transforms[2];
+
+	transforms[0]->setPosition(bat1Pos[6] + velBat1.x, bat1Pos[7] + velBat1.y);
+	transforms[1]->setPosition(bat2Pos[6] + velBat2.x, bat2Pos[7] + velBat2.y);
+
+	Vector2 ballVel = *ballDir * ballMoveSpeed * deltaTime;
+	Vector2 newBallPos = Vector2(ballPos[6] + ballVel.x, ballPos[7] + ballVel.y);
+	if (newBallPos.x < 0 + 16)
+	{
+		resetBall();
+		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
+	}
+	else if (newBallPos.x > 1280 - 16)
+	{
+		resetBall();
+		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
+	}
+
+	if (newBallPos.y < 0 + 16)
+	{
+		newBallPos.y = 16;
+		ballDir->y = ballDir->y * -1;
+	}
+	else if (newBallPos.y > 720 - 16)
+	{
+		newBallPos.y = 720 - 16;
+		ballDir->y = ballDir->y * -1;
+	}
+
+	transforms[2]->setPosition(newBallPos);
+
+	Matrix3 rotation = Matrix3();
+	rotation.setRotateZ(5.0f * deltaTime);
+
+	*transforms[2] *= rotation;
+
+	//bat1Pos = (float*)transforms[0];
+	//bat2Pos = (float*)transforms[1];
+
+	//ballPos = (float*)transforms[2];
+
 	return true;
 }
 
 void Application2D::draw() {
 
-	// wipe the screen to the background colour
 	clearScreen();
 
-	// begin drawing sprites
 	m_spriteBatch->begin();
 
-
-
-	//std::cout << ((float*)transforms[0])[6] << ", " << ((float*)transforms[0])[7] << ", " << ((float*)transforms[0])[8] << std::endl;
-
 	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)transforms[0]);
-	/*m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
-	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]);*/
+	m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
+	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]);
 
-	// done drawing sprites
 	m_spriteBatch->end();
+}
+
+void Application2D::resetBall()
+{
+	ballDir->x = (rand() % 100 + 1) * (rand() % 2 ? 1 : -1);
+	ballDir->y = (rand() % 100) * (rand() % 2 ? 1 : -1);
+	ballDir->normalise();
 }

@@ -57,6 +57,28 @@ void Vector2::normalise()
 	}
 }
 
+bool Vector2::intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
+{
+
+	//if(intersectsLocation(pos1, size1, pos2, size2))
+	return false;
+}
+
+Vector2 Vector2::intersectsLocation(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
+{
+	Vector2 intersectsLocation = Vector2();
+
+	Vector2 min1 = Vector2(pos1.x, pos2.y);
+	Vector2 min2 = Vector2(pos2.x, pos2.y);
+
+	Vector2 max1 = Vector2(pos1.x + size1.x, pos1.y + size1.y);
+	Vector2 max2 = Vector2(pos2.x + size2.x, pos2.y + size2.y);
+
+	//if(max2.x - size2.x < max1.x && max2.x )
+
+	return intersectsLocation;
+}
+
 Vector2 Vector2::operator+(Vector2 otherVec) const
 {
 	return Vector2(x + otherVec.x, y + otherVec.y);

@@ -89,6 +89,10 @@ public:
 	*/
 	void normalise();
 
+	bool intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
+
+	Vector2 intersectsLocation(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
+
 	/**
 	* Allows to plus two Vector2's together.
 	* This is not a function that you call, but operator overloads the + symbol so you can
