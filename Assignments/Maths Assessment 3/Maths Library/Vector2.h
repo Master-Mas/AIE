@@ -18,6 +18,9 @@ public:
 	*/
 	static const Vector2 ZERO;
 
+	/**
+	* Variables that store the values of the Vector
+	*/
 	float x = 0;
 	float y = 0;
 
@@ -64,7 +67,7 @@ public:
 	const void setY(const float otherY);
 
 	/**
-	* 
+	* Gets the dot product of a Vector2. 
 	*/
 	float dot(const Vector2 & vector2) const;
 
@@ -90,8 +93,6 @@ public:
 	void normalise();
 
 	bool intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
-
-	Vector2 intersectsLocation(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
 
 	/**
 	* Allows to plus two Vector2's together.

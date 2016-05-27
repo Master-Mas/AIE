@@ -98,6 +98,11 @@ bool Application2D::update(float deltaTime) {
 
 	float* ballPos = (float*)transforms[2];
 
+	Matrix3 rotation = Matrix3();
+	rotation.setRotateZ(5.0f * deltaTime);
+
+	*transforms[2] *= rotation;
+
 	transforms[0]->setPosition(bat1Pos[6] + velBat1.x, bat1Pos[7] + velBat1.y);
 	transforms[1]->setPosition(bat2Pos[6] + velBat2.x, bat2Pos[7] + velBat2.y);
 
@@ -125,17 +130,20 @@ bool Application2D::update(float deltaTime) {
 		ballDir->y = ballDir->y * -1;
 	}
 
+	bat1Pos = (float*)transforms[0];
+	bat2Pos = (float*)transforms[1];
+
+	
+	if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat1Pos[7], bat1Pos[8]), Vector2(32, 128)))
+	{
+		*ballDir * -1;
+	}
+	else if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat1Pos[7], bat1Pos[8]), Vector2(32, 128))) 
+	{
+		*ballDir * -1;
+	}
+
 	transforms[2]->setPosition(newBallPos);
-
-	Matrix3 rotation = Matrix3();
-	rotation.setRotateZ(5.0f * deltaTime);
-
-	*transforms[2] *= rotation;
-
-	//bat1Pos = (float*)transforms[0];
-	//bat2Pos = (float*)transforms[1];
-
-	//ballPos = (float*)transforms[2];
 
 	return true;
 }
