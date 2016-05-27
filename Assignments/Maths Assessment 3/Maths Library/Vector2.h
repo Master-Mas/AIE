@@ -67,7 +67,9 @@ public:
 	const void setY(const float otherY);
 
 	/**
-	* Gets the dot product of a Vector2. 
+	* Gets the dot product of a Vector2.
+	*
+	* @return float The 
 	*/
 	float dot(const Vector2 & vector2) const;
 
