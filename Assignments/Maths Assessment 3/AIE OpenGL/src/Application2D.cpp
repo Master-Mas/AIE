@@ -22,7 +22,7 @@ Application2D::~Application2D()
 bool Application2D::startup() 
 {
 	
-	createWindow("A.I. Project", 1280, 720);
+	createWindow("Maths Library Graphics Test", 1280, 720);
 
 	m_spriteBatch = new SpriteBatch();
 
@@ -40,6 +40,19 @@ bool Application2D::startup()
 
 	transforms[2] = new Matrix3();
 	transforms[2]->setPosition(Vector2((1280 / 2) - 16, (720 / 2) - 16));
+
+	numbers = new Texture*[10];
+
+	numbers[0] = new Texture("./bin/textures/numbers/0.png");
+	numbers[1] = new Texture("./bin/textures/numbers/1.png");
+	numbers[2] = new Texture("./bin/textures/numbers/2.png");
+	numbers[3] = new Texture("./bin/textures/numbers/3.png");
+	numbers[4] = new Texture("./bin/textures/numbers/4.png");
+	numbers[5] = new Texture("./bin/textures/numbers/5.png");
+	numbers[6] = new Texture("./bin/textures/numbers/6.png");
+	numbers[7] = new Texture("./bin/textures/numbers/7.png");
+	numbers[8] = new Texture("./bin/textures/numbers/8.png");
+	numbers[9] = new Texture("./bin/textures/numbers/9.png");
 
 	resetBall();
 
@@ -112,11 +125,13 @@ bool Application2D::update(float deltaTime) {
 	{
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
+		score[1]++;
 	}
 	else if (newBallPos.x > 1280 - 16)
 	{
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
+		score[0]++;
 	}
 
 	if (newBallPos.y < 0 + 16)
@@ -136,10 +151,12 @@ bool Application2D::update(float deltaTime) {
 	
 	if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat1Pos[7], bat1Pos[8]), Vector2(32, 128)))
 	{
+		std::cout << "Left Bat" << std::endl;
 		*ballDir * -1;
 	}
-	else if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat1Pos[7], bat1Pos[8]), Vector2(32, 128))) 
+	else if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat2Pos[7], bat1Pos[8]), Vector2(32, 128))) 
 	{
+		std::cout << "Right Bat" << std::endl;
 		*ballDir * -1;
 	}
 
@@ -157,6 +174,12 @@ void Application2D::draw() {
 	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)transforms[0]);
 	m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
 	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]);
+
+
+	m_spriteBatch->drawSprite(numbers[score[0]], 128, 624, 64, 64);
+	m_spriteBatch->drawSprite(numbers[score[1]], 1152, 624, 64, 64);
+
+	/*std::cout << ((float*)transforms[0])[7] << std::endl;*/
 
 	m_spriteBatch->end();
 }

@@ -26,11 +26,13 @@ private:
 	Texture* m_bat1;
 	Texture* m_bat2;
 	Texture* m_ball;
+	Texture** numbers;
 
 	Matrix3** transforms;
 
 	float batMoveSpeed = 200;
 	float ballMoveSpeed = 400;
+	int score[2] = { 0,0 };
 	Vector2* ballDir = new Vector2();
 
 	void resetBall();
