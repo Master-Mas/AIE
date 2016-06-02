@@ -35,5 +35,10 @@ private:
 	int score[2] = { 0,0 };
 	Vector2* ballDir = new Vector2();
 
+	Vector2* recA1;
+	Vector2* recB1;
+	Vector2* recA2;
+	Vector2* recB2;
+
 	void resetBall();
 };

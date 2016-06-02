@@ -125,13 +125,13 @@ bool Application2D::update(float deltaTime) {
 	{
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
-		score[1]++;
+		//score[1]++;
 	}
 	else if (newBallPos.x > 1280 - 16)
 	{
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
-		score[0]++;
+		//score[0]++;
 	}
 
 	if (newBallPos.y < 0 + 16)
@@ -160,6 +160,12 @@ bool Application2D::update(float deltaTime) {
 		*ballDir * -1;
 	}
 
+	recA1 = new Vector2(newBallPos.x, bat1Pos[8] + 32);
+	recB1 = new Vector2(bat2Pos[7], bat1Pos[8] + 128);
+
+	recA2 = new Vector2(newBallPos.x + 32, bat2Pos[7]);
+	recB2 = new Vector2(bat2Pos[7] + 32, bat1Pos[8]);
+
 	transforms[2]->setPosition(newBallPos);
 
 	return true;
@@ -179,7 +185,35 @@ void Application2D::draw() {
 	m_spriteBatch->drawSprite(numbers[score[0]], 128, 624, 64, 64);
 	m_spriteBatch->drawSprite(numbers[score[1]], 1152, 624, 64, 64);
 
+	
+
+	/*m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7], ((float*)transforms[0])[6], ((float*)transforms[0])[7] + 64);
+	m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7], ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7]);
+	m_spriteBatch->drawLine(((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7], ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7] + 64);
+	m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7] + 64, ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7] + 64);
+
+	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7], ((float*)transforms[1])[6], ((float*)transforms[1])[7] + 64);
+	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7], ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7]);
+	m_spriteBatch->drawLine(((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7], ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7] + 64);
+	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7] + 64, ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7] + 64);*/
+
+	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16);
+	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7]);
+	m_spriteBatch->drawLine(((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
+	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16, ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
+
+
+	m_spriteBatch->drawLine(recA1->x, recA1->y, recB1->x, recB1->y);
+	/*m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7]);
+	m_spriteBatch->drawLine(((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
+	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16, ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);*/
+
 	/*std::cout << ((float*)transforms[0])[7] << std::endl;*/
+
+	delete recA1;
+	delete recB1;
+	delete recA2;
+	delete recB2;
 
 	m_spriteBatch->end();
 }

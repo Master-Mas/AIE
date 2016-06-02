@@ -59,13 +59,19 @@ void Vector2::normalise()
 
 bool Vector2::intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
 {
-	Vector2 recA1 = Vector2(pos1.x, pos2.y + size1.y);
-	Vector2 recB1 = Vector2(pos2.x, pos2.y + size2.y);
-
+	Vector2 recA1 = Vector2(pos1.x, pos1.y + size1.y);
 	Vector2 recA2 = Vector2(pos1.x + size1.x, pos1.y);
+
+	Vector2 recB1 = Vector2(pos2.x, pos2.y + size2.y);
 	Vector2 recB2 = Vector2(pos2.x + size2.x, pos2.y);
 
-	return recA1.x < recB2.x && recA2.x > recB1.x && recA1.y < recB2.y && recA2.y > recB1.x;
+	return
+		recA1.x < recB1.x + size2.x &&
+		recA1.x + size1.x < recB1.x &&
+		recA1.y < recB1.y + size2.y &&
+		recA1.y + size1.y < recB1.y;
+
+	//return recA1.x < recB2.x && recA2.x > recB1.x && recA1.y < recB2.y && recA2.y > recB1.x;
 }
 
 Vector2 Vector2::operator+(Vector2 otherVec) const
