@@ -8,7 +8,6 @@ Matrix3::Matrix3()
 
 Matrix3::Matrix3(float x, float y, float z, float w, float v, float u, float t, float s, float r)
 {
-
 	matrixData[0][0] = x;
 	matrixData[0][1] = y;
 	matrixData[0][2] = z;
@@ -67,6 +66,7 @@ void Matrix3::setPosition(Vector3 otherVector)
 	matrixData[2][0] = otherVector.x;
 	matrixData[2][1] = otherVector.y;
 	matrixData[2][2] = otherVector.z;
+	//updateChildren();
 }
 
 void Matrix3::setPosition(float x, float y, float z)
@@ -74,18 +74,21 @@ void Matrix3::setPosition(float x, float y, float z)
 	matrixData[2][0] = x;
 	matrixData[2][1] = y;
 	matrixData[2][2] = z;
+	//updateChildren();
 }
 
 void Matrix3::setPosition(Vector2 otherVector)
 {
 	matrixData[2][0] = otherVector.x;
 	matrixData[2][1] = otherVector.y;
+	//updateChildren();
 }
 
 void Matrix3::setPosition(float x, float y)
 {
 	matrixData[2][0] = x;
 	matrixData[2][1] = y;
+	//updateChildren();
 }
 
 void Matrix3::setScale(Vector3 otherVector)
@@ -93,6 +96,7 @@ void Matrix3::setScale(Vector3 otherVector)
 	matrixData[0][0] = otherVector.x;
 	matrixData[1][1] = otherVector.y;
 	matrixData[2][2] = otherVector.z;
+	//updateChildren();
 }
 
 void Matrix3::setScale(float x, float y, float z)
@@ -100,18 +104,21 @@ void Matrix3::setScale(float x, float y, float z)
 	matrixData[0][0] = x;
 	matrixData[1][1] = y;
 	matrixData[2][2] = z;
+	//updateChildren();
 }
 
 void Matrix3::setScale(Vector2 otherVector)
 {
 	matrixData[0][0] = otherVector.x;
 	matrixData[1][1] = otherVector.y;
+	//updateChildren();
 }
 
 void Matrix3::setScale(float x, float y)
 {
 	matrixData[0][0] = x;
 	matrixData[1][1] = y;
+	//updateChildren();
 }
 
 Matrix3 & Matrix3::transpose()
@@ -179,6 +186,8 @@ void Matrix3::operator*=(const Matrix3 & otherMatrix)
 	matrixData[2][0] = temp.matrixData[2][0];
 	matrixData[2][1] = temp.matrixData[2][1];
 	matrixData[2][2] = temp.matrixData[2][2];
+
+	//updateChildren();
 }
 
 Matrix3& operator*(const Matrix3 & firstMatrix, const Matrix3 & secondMatrix)
@@ -231,27 +240,67 @@ Matrix3::operator float*()
 	return allData;
 }
 
-float Matrix3::operator[](int i)
-{
-	if (i > sizeof(matrixData) || i < 0)
-	{
-		return *(matrixData[i]);
-	}
-	else
-	{
-		throw std::out_of_range("Index is not in range of Matrix3");
-	}
-}
-
 void Matrix3::operator+=(const Vector3 & otherVector)
 {
 	matrixData[2][0] += otherVector.x;
 	matrixData[2][1] += otherVector.y;
 	matrixData[2][2] += otherVector.z;
+	//updateChildren();
 }
 
 void Matrix3::operator+=(const Vector2 & otherVector)
 {
 	matrixData[2][0] += otherVector.x;
 	matrixData[2][1] += otherVector.y;
+	//updateChildren();
+}
+
+void Matrix3::addChild(Matrix3 & other)
+{
+	children->push_back(other);
+	other.addParent(this);
+}
+
+void Matrix3::removeChild(Matrix3 & other)
+{
+	for (int i = 0; i < children->size(); ++i)
+	{
+		if (children->at(i) == other)
+		{
+			//children.erase(children.begin() + i);
+			break;
+		}
+	}
+}
+
+void Matrix3::addParent(Matrix3 * other)
+{
+	parent = other;
+}
+
+void Matrix3::removeParent()
+{
+	parent = nullptr;
+}
+
+void Matrix3::updateChildren()
+{
+	if (parent != nullptr)
+	{
+		Matrix3 temp = *this * (*parent);
+		float* matrixArray = (float*)temp;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int ii = 0; ii < 3; ++ii)
+			{
+				//matrixData[i][ii] = matrixArray[i + ii];
+			}
+		}
+	}
+
+	for (int i = 0; i < children->size(); ++i)
+	{
+		children->at(i).updateChildren();
+	}
 }

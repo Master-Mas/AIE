@@ -59,24 +59,24 @@ void Vector2::normalise()
 
 bool Vector2::intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
 {
-	Vector2 recA1 = Vector2(pos1.x, pos1.y + size1.y);
-	Vector2 recA2 = Vector2(pos1.x + size1.x, pos1.y);
+	if (abs(pos1.x - pos2.x) < size1.x + size2.x) {
+		if (abs(pos1.y - pos2.y) < size1.y + size2.y) {
+			return true;
+		}
+	}
 
-	Vector2 recB1 = Vector2(pos2.x, pos2.y + size2.y);
-	Vector2 recB2 = Vector2(pos2.x + size2.x, pos2.y);
-
-	return
-		recA1.x < recB1.x + size2.x &&
-		recA1.x + size1.x < recB1.x &&
-		recA1.y < recB1.y + size2.y &&
-		recA1.y + size1.y < recB1.y;
-
-	//return recA1.x < recB2.x && recA2.x > recB1.x && recA1.y < recB2.y && recA2.y > recB1.x;
+	return false;
 }
 
 Vector2 Vector2::operator+(Vector2 otherVec) const
 {
 	return Vector2(x + otherVec.x, y + otherVec.y);
+}
+
+void Vector2::operator+=(Vector2 otherVec)
+{
+	x += otherVec.x;
+	y += otherVec.y;
 }
 
 Vector2 Vector2::operator-(Vector2 otherVec) const
@@ -87,6 +87,12 @@ Vector2 Vector2::operator-(Vector2 otherVec) const
 Vector2 Vector2::operator*(float number)
 {
 	return Vector2(x * number, y * number);
+}
+
+void Vector2::operator*=(float number)
+{
+	x *= number;
+	y *= number;
 }
 
 Vector2 operator*(float number, const Vector2 & otherVec)

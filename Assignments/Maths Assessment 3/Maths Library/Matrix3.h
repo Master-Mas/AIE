@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "Vector2.h"
+#include <vector>
 
 class Matrix3
 {
@@ -38,13 +39,24 @@ public:
 
 	//Casts and Accessors
 	operator float*();
-	float operator[] (int i);
 
 	//Maths Ops
 	void operator+=(const Vector3 & otherVector);
 	void operator+=(const Vector2 & otherVector);
 
+	//Hierarchy
+	void addChild(Matrix3 & other);
+	void removeChild(Matrix3 & other);
+	void addParent(Matrix3 * other);
+	void removeParent();
+	void updateChildren();
+
+	int id = -1;
+
 private:
 	float matrixData[3][3] = { {1,0,0}, {0,1,0}, {0,0,1} };
+	std::vector<Matrix3>* children = new std::vector<Matrix3>(0);
+	Matrix3 * parent = nullptr;
+
 };
 

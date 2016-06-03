@@ -106,6 +106,8 @@ public:
 	*/
 	Vector2 operator+ (const Vector2 otherVec) const;
 
+	void operator+=(Vector2 otherVec);
+
 	/**
 	* Allows to subract two Vector2's.
 	* This is not a function that you call, but operator overloads the - symbol so you can
@@ -127,6 +129,8 @@ public:
 	* @return Vector2 The product of the Vector2 and the float
 	*/
 	Vector2 operator* (float number);
+
+	void operator*=(float number);
 
 	/**
 	* Allows to multiply a float and a Vector2.

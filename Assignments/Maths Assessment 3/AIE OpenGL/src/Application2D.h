@@ -27,6 +27,9 @@ private:
 	Texture* m_bat2;
 	Texture* m_ball;
 	Texture** numbers;
+	Font* font;
+
+	Matrix3* child;
 
 	Matrix3** transforms;
 
@@ -39,6 +42,8 @@ private:
 	Vector2* recB1;
 	Vector2* recA2;
 	Vector2* recB2;
+
+	bool collision = false;
 
 	void resetBall();
 };

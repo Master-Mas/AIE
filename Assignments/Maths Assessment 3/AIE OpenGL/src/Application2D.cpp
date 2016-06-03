@@ -30,6 +30,10 @@ bool Application2D::startup()
 	m_bat1 = new Texture("./bin/textures/bat1.png");
 	m_bat2 = new Texture("./bin/textures/bat2.png");
 
+	child = new Matrix3();
+	child->setPosition(200, 200);
+	child->id = 1;
+
 	transforms = new Matrix3*[3];
 
 	transforms[0] = new Matrix3();
@@ -40,6 +44,8 @@ bool Application2D::startup()
 
 	transforms[2] = new Matrix3();
 	transforms[2]->setPosition(Vector2((1280 / 2) - 16, (720 / 2) - 16));
+	//transforms[2]->id = 2;
+	//transforms[2]->addChild(*child);
 
 	numbers = new Texture*[10];
 
@@ -54,6 +60,8 @@ bool Application2D::startup()
 	numbers[8] = new Texture("./bin/textures/numbers/8.png");
 	numbers[9] = new Texture("./bin/textures/numbers/9.png");
 
+	font = new Font("./bin/font/consolas.ttf", 32);
+
 	resetBall();
 
 	return true;
@@ -61,11 +69,14 @@ bool Application2D::startup()
 
 void Application2D::shutdown() 
 {
+	delete font;
 	delete m_spriteBatch;
 
 	delete m_bat1;
 	delete m_bat2;
 	delete m_ball;
+
+	delete child;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -108,71 +119,93 @@ bool Application2D::update(float deltaTime) {
 
 	float* bat1Pos = (float*)transforms[0];
 	float* bat2Pos = (float*)transforms[1];
-
 	float* ballPos = (float*)transforms[2];
 
 	Matrix3 rotation = Matrix3();
-	rotation.setRotateZ(5.0f * deltaTime);
+	rotation.setRotateZ(4.5f * deltaTime);
 
 	*transforms[2] *= rotation;
 
-	transforms[0]->setPosition(bat1Pos[6] + velBat1.x, bat1Pos[7] + velBat1.y);
-	transforms[1]->setPosition(bat2Pos[6] + velBat2.x, bat2Pos[7] + velBat2.y);
+	Vector2 bat1PosV = Vector2(bat1Pos[6] + velBat1.x, bat1Pos[7] + velBat1.y);
+	if (bat1PosV.y < 64) 
+	{
+		bat1PosV.y = 64;
+	}
+	else if (bat1PosV.y > 720 - 64) 
+	{
+		bat1PosV.y = 720 - 64;
+	}
+
+	Vector2 bat2PosV = Vector2(bat2Pos[6] + velBat2.x, bat2Pos[7] + velBat2.y);
+	if (bat2PosV.y < 64)
+	{
+		bat2PosV.y = 64;
+	}
+	else if (bat2PosV.y > 720 - 64)
+	{
+		bat2PosV.y = 720 - 64;
+	}
+
+	transforms[0]->setPosition(bat1PosV);
+	transforms[1]->setPosition(bat2PosV);
+
+	bat1Pos = (float*)(transforms[0]);
+	bat2Pos = (float*)(transforms[1]);
+	ballPos = (float*)(transforms[2]);
+	Vector2 newBallPos = Vector2(ballPos[6], ballPos[7]);
+	Vector2 newBat1Pos = Vector2(bat1Pos[6], bat1Pos[7]) - Vector2(16, 64);
+	Vector2 newBat2Pos = Vector2(bat2Pos[6], bat2Pos[7]) - Vector2(16, 64);
 
 	Vector2 ballVel = *ballDir * ballMoveSpeed * deltaTime;
-	Vector2 newBallPos = Vector2(ballPos[6] + ballVel.x, ballPos[7] + ballVel.y);
+	newBallPos += ballVel;
+
+	if (newBallPos.intersects(newBallPos - Vector2(16, 16), Vector2(16, 16), newBat1Pos, Vector2(16, 64)))
+	{
+		ballDir->x *= -1.0f;
+		newBallPos.x += 8;
+		ballMoveSpeed = ballMoveSpeed * 1.05f;
+	}
+	else if (newBallPos.intersects(newBallPos - Vector2(16, 16), Vector2(16, 16), newBat2Pos, Vector2(16, 64)))
+	{
+		ballDir->x *= -1;
+		newBallPos.x -= 8;
+		ballMoveSpeed = ballMoveSpeed * 1.05f;
+	}
+
 	if (newBallPos.x < 0 + 16)
 	{
+		std::cout << "Score" << std::endl;
+		std::cout << newBallPos.x;
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
-		//score[1]++;
+		score[1]++;
 	}
 	else if (newBallPos.x > 1280 - 16)
 	{
 		resetBall();
 		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
-		//score[0]++;
+		score[0]++;
 	}
 
 	if (newBallPos.y < 0 + 16)
 	{
 		newBallPos.y = 16;
-		ballDir->y = ballDir->y * -1;
+		ballDir->y *= -1;
 	}
 	else if (newBallPos.y > 720 - 16)
 	{
 		newBallPos.y = 720 - 16;
-		ballDir->y = ballDir->y * -1;
+		ballDir->y *= -1;
 	}
-
-	bat1Pos = (float*)transforms[0];
-	bat2Pos = (float*)transforms[1];
-
-	
-	if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat1Pos[7], bat1Pos[8]), Vector2(32, 128)))
-	{
-		std::cout << "Left Bat" << std::endl;
-		*ballDir * -1;
-	}
-	else if (newBallPos.intersects(newBallPos, Vector2(32, 32), Vector2(bat2Pos[7], bat1Pos[8]), Vector2(32, 128))) 
-	{
-		std::cout << "Right Bat" << std::endl;
-		*ballDir * -1;
-	}
-
-	recA1 = new Vector2(newBallPos.x, bat1Pos[8] + 32);
-	recB1 = new Vector2(bat2Pos[7], bat1Pos[8] + 128);
-
-	recA2 = new Vector2(newBallPos.x + 32, bat2Pos[7]);
-	recB2 = new Vector2(bat2Pos[7] + 32, bat1Pos[8]);
 
 	transforms[2]->setPosition(newBallPos);
 
 	return true;
 }
 
-void Application2D::draw() {
-
+void Application2D::draw() 
+{
+	std::cout << score[1] << std::endl;
 	clearScreen();
 
 	m_spriteBatch->begin();
@@ -181,46 +214,19 @@ void Application2D::draw() {
 	m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
 	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]);
 
-
 	m_spriteBatch->drawSprite(numbers[score[0]], 128, 624, 64, 64);
 	m_spriteBatch->drawSprite(numbers[score[1]], 1152, 624, 64, 64);
 
-	
-
-	/*m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7], ((float*)transforms[0])[6], ((float*)transforms[0])[7] + 64);
-	m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7], ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7]);
-	m_spriteBatch->drawLine(((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7], ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7] + 64);
-	m_spriteBatch->drawLine(((float*)transforms[0])[6], ((float*)transforms[0])[7] + 64, ((float*)transforms[0])[6] + 16, ((float*)transforms[0])[7] + 64);
-
-	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7], ((float*)transforms[1])[6], ((float*)transforms[1])[7] + 64);
-	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7], ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7]);
-	m_spriteBatch->drawLine(((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7], ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7] + 64);
-	m_spriteBatch->drawLine(((float*)transforms[1])[6], ((float*)transforms[1])[7] + 64, ((float*)transforms[1])[6] + 16, ((float*)transforms[1])[7] + 64);*/
-
-	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16);
-	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7]);
-	m_spriteBatch->drawLine(((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
-	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16, ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
-
-
-	m_spriteBatch->drawLine(recA1->x, recA1->y, recB1->x, recB1->y);
-	/*m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7]);
-	m_spriteBatch->drawLine(((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7], ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);
-	m_spriteBatch->drawLine(((float*)transforms[2])[6], ((float*)transforms[2])[7] + 16, ((float*)transforms[2])[6] + 16, ((float*)transforms[2])[7] + 16);*/
-
-	/*std::cout << ((float*)transforms[0])[7] << std::endl;*/
-
-	delete recA1;
-	delete recB1;
-	delete recA2;
-	delete recB2;
+	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)child);
 
 	m_spriteBatch->end();
 }
 
 void Application2D::resetBall()
 {
-	ballDir->x = (rand() % 100 + 1) * (rand() % 2 ? 1 : -1);
-	ballDir->y = (rand() % 100) * (rand() % 2 ? 1 : -1);
+	ballMoveSpeed = 400;
+	ballDir->x = (rand() % 100 + 50) * (rand() % 2 ? 1 : -1);
+	ballDir->y = ((rand() % 25) + 50) * (rand() % 2 ? 1 : -1);
 	ballDir->normalise();
 }
+
