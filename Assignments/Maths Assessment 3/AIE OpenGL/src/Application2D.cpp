@@ -119,7 +119,6 @@ bool Application2D::update(float deltaTime) {
 
 	float* bat1Pos = (float*)transforms[0];
 	float* bat2Pos = (float*)transforms[1];
-	float* ballPos = (float*)transforms[2];
 
 	Matrix3 rotation = Matrix3();
 	rotation.setRotateZ(4.5f * deltaTime);
@@ -151,13 +150,13 @@ bool Application2D::update(float deltaTime) {
 
 	bat1Pos = (float*)(transforms[0]);
 	bat2Pos = (float*)(transforms[1]);
-	ballPos = (float*)(transforms[2]);
+	float* ballPos = (float*)(transforms[2]);
 	Vector2 newBallPos = Vector2(ballPos[6], ballPos[7]);
 	Vector2 newBat1Pos = Vector2(bat1Pos[6], bat1Pos[7]) - Vector2(16, 64);
 	Vector2 newBat2Pos = Vector2(bat2Pos[6], bat2Pos[7]) - Vector2(16, 64);
 
 	Vector2 ballVel = *ballDir * ballMoveSpeed * deltaTime;
-	newBallPos += ballVel;
+	//newBallPos += ballVel;
 
 	if (newBallPos.intersects(newBallPos - Vector2(16, 16), Vector2(16, 16), newBat1Pos, Vector2(16, 64)))
 	{
@@ -175,10 +174,9 @@ bool Application2D::update(float deltaTime) {
 	if (newBallPos.x < 0 + 16)
 	{
 		std::cout << "Score" << std::endl;
-		std::cout << newBallPos.x;
-		resetBall();
-		newBallPos = Vector2((1280 / 2) - 16, (720 / 2) - 16);
-		score[1]++;
+		//resetBall();
+		newBallPos = Vector2(624, (720 / 2) - 16);
+		//score[1]++;
 	}
 	else if (newBallPos.x > 1280 - 16)
 	{
@@ -198,6 +196,7 @@ bool Application2D::update(float deltaTime) {
 		ballDir->y *= -1;
 	}
 
+	std::cout << newBallPos.toString() << std::endl;
 	transforms[2]->setPosition(newBallPos);
 
 	return true;
@@ -205,25 +204,25 @@ bool Application2D::update(float deltaTime) {
 
 void Application2D::draw() 
 {
-	std::cout << score[1] << std::endl;
 	clearScreen();
 
 	m_spriteBatch->begin();
 
-	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)transforms[0]);
-	m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);
-	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]);
+	/*m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)transforms[0]);
+	m_spriteBatch->drawSpriteTransformed3x3(m_bat2, (float*)transforms[1]);*/
+	m_spriteBatch->drawSpriteTransformed3x3(m_ball, (float*)transforms[2]->transpose());
 
-	m_spriteBatch->drawSprite(numbers[score[0]], 128, 624, 64, 64);
-	m_spriteBatch->drawSprite(numbers[score[1]], 1152, 624, 64, 64);
+	//m_spriteBatch->drawSprite(numbers[score[0]], 128, 624, 64, 64);
+	//m_spriteBatch->drawSprite(numbers[score[0]], 1152, 624, 64, 64);
 
-	m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)child);
+	//m_spriteBatch->drawSpriteTransformed3x3(m_bat1, (float*)child);
 
 	m_spriteBatch->end();
 }
 
 void Application2D::resetBall()
 {
+	std::cout << "Reset Ball" << std::endl;
 	ballMoveSpeed = 400;
 	ballDir->x = (rand() % 100 + 50) * (rand() % 2 ? 1 : -1);
 	ballDir->y = ((rand() % 25) + 50) * (rand() % 2 ? 1 : -1);
