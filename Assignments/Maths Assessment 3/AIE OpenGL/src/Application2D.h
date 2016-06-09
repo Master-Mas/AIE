@@ -2,6 +2,8 @@
 
 #include "BaseApplication.h"
 #include "GamesMath.h"
+#include <string>
+#include <fstream>
 
 class SpriteBatch;
 class Texture;
@@ -19,6 +21,9 @@ public:
 	virtual bool update(float deltaTime);
 	virtual void draw();
 
+	void save();
+	void load();
+
 protected:
 	SpriteBatch* m_spriteBatch;
 
@@ -26,12 +31,17 @@ private:
 	Texture* m_bat1;
 	Texture* m_bat2;
 	Texture* m_ball;
+	Texture* m_shield;
 	Texture** numbers;
-	Font* font;
-
-	Matrix3* child;
 
 	Matrix3** transforms;
+
+	Matrix3* transform1;
+	Matrix3* transform2;
+	Matrix3* transform3;
+	Matrix3* transform4;
+
+	Font* font;
 
 	float batMoveSpeed = 200;
 	float ballMoveSpeed = 400;
@@ -43,7 +53,8 @@ private:
 	Vector2* recA2;
 	Vector2* recB2;
 
-	bool collision = false;
+	std::ifstream inFile;
+	bool lifecycleTick = false;
 
 	void resetBall();
 };
