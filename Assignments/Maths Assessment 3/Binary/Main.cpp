@@ -52,6 +52,8 @@ void main()
 {
 	Main main;
 
+
+
 	unsigned test = 0b00000001;
 	std::cout << main.GetRightMostSetBit(test) << "\n";
 
@@ -65,6 +67,8 @@ void main()
 	std::cout << main.GetRightMostSetBit(test) << "\n";
 
 	main.PrintBinary('b');
+
+	std::cout << ~0b11111 << std::endl;
 
 	system("pause");
 }
