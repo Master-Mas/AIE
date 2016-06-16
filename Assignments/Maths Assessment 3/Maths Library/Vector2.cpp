@@ -57,7 +57,7 @@ void Vector2::normalise()
 	}
 }
 
-bool Vector2::intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2)
+bool Vector2::intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) const
 {
 	if (abs(pos1.x - pos2.x) < size1.x + size2.x) {
 		if (abs(pos1.y - pos2.y) < size1.y + size2.y) {

@@ -85,14 +85,9 @@ void Vector3::normalise()
 	}
 }
 
-bool Vector3::intersects(Vector3 pos1, Vector3 size1, Vector3 pos2, Vector3 size2)
+bool Vector3::intersects(Vector3 pos1, Vector3 size1, Vector3 pos2, Vector3 size2) const
 {
 	return false;
-}
-
-Vector3 Vector3::intersectsLocation(Vector3 pos1, Vector3 size1, Vector3 pos2, Vector3 size2)
-{
-	return Vector3();
 }
 
 Vector3 Vector3::operator+(Vector3 otherVec) const

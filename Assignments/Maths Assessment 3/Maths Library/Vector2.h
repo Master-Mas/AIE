@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Author:			Sam Murphy
-// Date Modified:	2016-04-15
+// Date Modified:	2016-06-16
 // Brief:			A Maths Vector2 Class
 ////////////////////////////////////////////////////////////
 
@@ -69,7 +69,7 @@ public:
 	/**
 	* Gets the dot product of a Vector2.
 	*
-	* @return float The 
+	* @return float
 	*/
 	float dot(const Vector2 & vector2) const;
 
@@ -94,7 +94,29 @@ public:
 	*/
 	void normalise();
 
-	bool intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2);
+	/**
+	* Checks to see if 2 Rectangles are within the bounds of each other.
+	* abs(x1-x2) < w1 + w2 && abs(y1-y2) < h1 + h2
+	*
+	*  ___________
+	* |H  Width1  |
+	* |E       ___|_______
+	* |I      |H  Width2  |
+	* |G      |E  |       |
+	* |H      |I  |       |
+	* |T      |G  |       |
+	* |1      |H  |       |
+	* |_______|T__|       |
+	*         |2          |
+	*         |___________|
+	*  
+	* @param pos1 The Top Left position of the First Rectangle
+	* @param size1 The Width and Height of the First Rectangle
+	* @param pos2 The Top Left position of the Second Rectangle
+	* @param size2 The Width and Height of the Second Rectangle
+	* @return bool if the 2 rectangles are intersecting
+	*/
+	bool intersects(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) const;
 
 	/**
 	* Allows to plus two Vector2's together.
@@ -106,6 +128,12 @@ public:
 	*/
 	Vector2 operator+ (const Vector2 otherVec) const;
 
+	/**
+	* Allows to plus two Vector2's together.
+	* This is not a function that you call, but operator overloads the += symbol so you can
+	* express a plus operation like Vector2 += Vector2. 
+	*
+	*/
 	void operator+=(Vector2 otherVec);
 
 	/**
@@ -130,6 +158,15 @@ public:
 	*/
 	Vector2 operator* (float number);
 
+	/**
+	* Allows to multiply a Vector2 and a float.
+	* This is not a function that you call, but operator overloads the *= symbol so you can
+	* express a multiplication operation like Vector2 *= float. This returns a new Vector2
+	* as it is only a *=. The float has to come after the Vector e.g.
+	* Vector2 *= float
+	* for this function to work
+	*
+	*/
 	void operator*=(float number);
 
 	/**
