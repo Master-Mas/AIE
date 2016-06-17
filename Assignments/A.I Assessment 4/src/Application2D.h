@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseApplication.h"
+#include <vector>
 
 class SpriteBatch;
 class Texture;
@@ -19,8 +20,8 @@ public:
 	virtual void draw();
 
 protected:
+	SpriteBatch* m_spriteBatch;
 
-	SpriteBatch*	m_spriteBatch;
-	Texture*		m_texture;
-	Font*			m_font;
+private:
+
 };
