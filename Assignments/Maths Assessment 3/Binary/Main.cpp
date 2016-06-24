@@ -52,7 +52,7 @@ void main()
 {
 	Main main;
 
-
+	std::cout << std::bitset<5>(~0b10101) << "\n";
 
 	unsigned test = 0b00000001;
 	std::cout << main.GetRightMostSetBit(test) << "\n";
