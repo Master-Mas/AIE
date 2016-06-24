@@ -22,14 +22,14 @@ public:
 	void setScale(glm::vec2 scaleAmount);
 	void setRotationZ(float rotationAmount);
 
-	Transform * getParent();
-	std::vector<std::unique_ptr<Transform>> getChildren();
+	Transform & getParent();
+	std::vector<Transform*> getChildren();
 
 	void setParent(Transform * parent);
-	void addChild(std::unique_ptr<Transform> child);
+	void addChild(Transform* child);
 private:
 	Transform * parent = nullptr;
-	std::vector<std::unique_ptr<Transform>> children;
+	std::vector<Transform*> children;
 	glm::mat3 matrix;
 };
 

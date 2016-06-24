@@ -20,10 +20,20 @@ bool Application2D::startup()
 	createWindow("A.I. Project", 1280, 720);
 
 	m_spriteBatch = new SpriteBatch();
+	textureManager = new TextureManager();
 
-	//m_texture = new Texture("./bin/textures/crate.png");
-
-	//m_font = new Font("./bin/font/consolas.ttf", 32);
+	int xSize = 39;
+	int yize = 22;
+	int spacing = 32;
+	float scale = 0.5f;
+	for (int i = 0; i < (yize * xSize); i++)
+	{
+		GameObject* obj = new Node();
+		obj->setTexture(textureManager->getTexture(0));
+		obj->getTransform()->setScale(glm::vec2(scale, scale));
+		obj->getTransform()->setPosition(glm::vec2(spacing * ((i % xSize) + 1), spacing * ((i / xSize) + 1)));
+		objects.push_back(obj);
+	}
 
 	return true;
 }
@@ -31,29 +41,55 @@ bool Application2D::startup()
 void Application2D::shutdown() 
 {
 
+
+	delete textureManager;
 	delete m_spriteBatch;
 
 	destroyWindow();
 }
 
+int index = 0;
+int textureID = 1;
+
 bool Application2D::update(float deltaTime) 
 {
-	
-	// close the application if the window closes or we press escape
 	if (hasWindowClosed() || isKeyPressed(GLFW_KEY_ESCAPE))
 		return false;
 
-	// the applciation closes if we return false
+
+	/*if (index == objects.size())
+	{
+		index = 0;
+		textureID++;
+		if (textureID == 3)
+		{
+			textureID = 0;
+		}
+	}*/
+	int counter = 0;
+	for each(GameObject* obj in objects)
+	{
+		/*if (counter == index) 
+		{
+			obj->setTexture(textureManager->getTexture(textureID));
+		}*/
+		obj->update(deltaTime);
+		counter++;
+	}
+
+	//index++;
+
 	return true;
 }
 
 void Application2D::draw() {
 
-	// wipe the screen to the background colour
 	clearScreen();
 
-	// begin drawing sprites
 	m_spriteBatch->begin();
-
+	for each(GameObject* obj in objects)
+	{
+		obj->draw(m_spriteBatch);
+	}
 	m_spriteBatch->end();	
 }

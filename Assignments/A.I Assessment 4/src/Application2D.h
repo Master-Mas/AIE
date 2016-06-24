@@ -1,6 +1,9 @@
 #pragma once
 
 #include "BaseApplication.h"
+#include "../TextureManager.h"
+#include "../GameObject.h"
+#include "../Node.h"
 #include <vector>
 
 class SpriteBatch;
@@ -21,7 +24,8 @@ public:
 
 protected:
 	SpriteBatch* m_spriteBatch;
+	TextureManager* textureManager;
 
 private:
-
+	std::vector<GameObject*> objects;
 };

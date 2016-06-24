@@ -14,11 +14,18 @@ public:
 
 	virtual void draw(SpriteBatch * spriteBatch);
 	virtual void update(float delta);
-
 	Transform * getTransform();
+
+	void setColor(float r, float g, float b);
+	void setColor(float r, float g, float b, float a);
+	void setAlpha(float a);
+
+	void setTexture(Texture* texture);
 
 private:
 	Transform transform;
 	Texture * texture = nullptr;
+	float color[4] = { 1,1,1,1 };
+	bool render = true;
 };
 
