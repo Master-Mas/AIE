@@ -1,7 +1,10 @@
 #include "Node.h"
 
-Node::Node()
+Node::Node(glm::vec2 vec)
 {
+
+	pos = vec;
+
 }
 
 Node::~Node()

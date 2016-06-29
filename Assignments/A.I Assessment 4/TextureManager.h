@@ -2,7 +2,7 @@
 
 #include <map>
 #include <sstream> 
-#include "src/Texture.h";
+#include "src/Texture.h"
 
 class TextureManager
 {
