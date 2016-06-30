@@ -2,10 +2,12 @@
 
 #include <vector>
 #include <list>
+#include <memory>
 
 #include "BaseApplication.h"
 #include "../TextureManager.h"
 #include "../GameObject.h"
+#include "../GridPoint.h"
 #include "../Node.h"
 
 
@@ -25,8 +27,8 @@ public:
 	virtual bool update(float deltaTime);
 	virtual void draw();
 
-	void astar(Node* start, Node* goal);
-	void reconstructPath(Node* fromPoint);
+	void astar(GridPoint* start, GridPoint* goal);
+	void reconstructPath(Node * fromPoint);
 
 protected:
 	SpriteBatch* m_spriteBatch;
@@ -34,7 +36,7 @@ protected:
 
 private:
 	std::vector<GameObject*> objects;
-	std::list<GameObject*> nodePoints;
+	std::map<int, std::vector<GridPoint*>*> nodePoints;
 
 	int xSize = 19;
 	int ySize = 11;

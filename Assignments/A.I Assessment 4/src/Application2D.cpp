@@ -26,16 +26,23 @@ bool Application2D::startup()
 	m_spriteBatch = new SpriteBatch();
 	textureManager = new TextureManager();
 
-	
+	std::vector<GridPoint*>* currentXRow;
+
 	for (int i = 0; i < (ySize * xSize); i++)
 	{
-		GameObject* obj = new GameObject();
+		if (i % xSize == 0)
+		{
+			currentXRow = new std::vector<GridPoint*>();
+			nodePoints.insert(std::pair<int, std::vector<GridPoint*>*>((int)i / xSize, currentXRow));
+		}
+
+		GridPoint* obj = new GridPoint(glm::vec2(spacing * ((i % xSize) + 1), spacing * ((i / xSize) + 1)));
 		obj->setTexture(textureManager->getTexture(0));
 		obj->getTransform()->setScale(glm::vec2(scale, scale));
-		obj->getTransform()->setPosition(glm::vec2(spacing * ((i % xSize) + 1), spacing * ((i / xSize) + 1)));
+		obj->gridPos = glm::vec2(i % xSize, (int)i / xSize);
 
-		nodePoints.push_back(obj);
 		objects.push_back(obj);
+		currentXRow->push_back(obj);
 	}
 
 	srand(time(NULL));
@@ -43,101 +50,108 @@ bool Application2D::startup()
 	glm::vec2 start = glm::vec2((int)(rand() % xSize) + 1, (int)(rand() % ySize) + 1);
 	glm::vec2 goal = glm::vec2((int)(rand() % xSize) + 1, (int)(rand() % ySize) + 1);
 
-	std::list<GameObject*>::iterator it = nodePoints.begin();
-	std::advance(it, start.x + (start.y * xSize));
+	std::vector<GridPoint*>* array = nodePoints.find((int)start.y - 1)->second;
+	GridPoint* startNode = array->at((int)start.x - 1);
+	startNode->setTexture(textureManager->getTexture(1));
 
-	(*it)->setTexture(textureManager->getTexture(1));
-
-	it = nodePoints.begin();
-	std::advance(it, goal.x + (goal.y * xSize));
-
-	(*it)->setTexture(textureManager->getTexture(2));
-
-	astar(new Node(start), new Node(goal));
+	array = nodePoints.find((int)goal.y - 1)->second;
+	GridPoint* goalNode = array->at((int)goal.x - 1);
+	goalNode->setTexture(textureManager->getTexture(2));
+	astar(startNode, goalNode);
 
 	return true;
 }
 
-void Application2D::astar(Node* start, Node* goal)
+void Application2D::astar(GridPoint* start, GridPoint* goal)
 {
 	std::vector<Node*> closed;
 	std::vector<Node*> open;
-	open.push_back(start);
+	open.push_back(new Node(start));
 
 	while (open.size() > 0)
 	{
 		Node* current = open[0];
 		for (int i = 0; i < open.size(); i++) 
 		{
-			if (open[i]->fScore < current->fScore)
+			if (open[i]->calcFScore() < current->calcFScore())
 			{
 				current = open[i];
 			}
 		}
 
-		if (current->pos == goal->pos)
-		{
-			return reconstructPath(current);
-		}
-
-		open.erase(std::remove(open.begin(), open.end(), current), open.end());
+		open.erase(std::remove(open.begin(), open.end(), current));
 		closed.push_back(current);
+
+		if (goal == current->gameObject)
+		{
+			std::cout << "Found Path" << std::endl;
+			reconstructPath(current);
+			return;
+		}
 
 		for (int i = 0; i < 8; i++)
 		{
-			glm::vec2 pos = glm::vec2(current->pos.x + (i % 3), current->pos.y + (int)(i / 3));
-			//auto point = nodePoints.find(pos);
-			if (/*point != nodePoints.end()*/true)
+			int yFinder = current->gameObject->gridPos.y + (i <= 2 ? -1 : i <= 5 ? 0 : 1);
+			int xFinder = current->gameObject->gridPos.x + (i % 3 == 0 ? -1 : i % 3 == 1 ? 0 : 1);
+
+			if (yFinder <= -1 || yFinder >= ySize || xFinder <= -1 || xFinder >= xSize)
 			{
-				bool markContinue = false;
-				for (int ii = 0; ii < closed.size(); i++)
-				{
-					if (closed[ii]->pos == pos)
-					{
-						markContinue = true;
-						break;
-					}
-				}
+				continue;
+			}
 
-				if (markContinue)
-				{
-					continue;
-				}
+			GridPoint* point = nodePoints.find(yFinder)->second->at(xFinder);
+			Node* neighbour = new Node(point);
+			if (!point->walkable)
+			{
+				delete neighbour;
+				continue;
+			}
 
-				int localDistance;
-				if (i == 0 || i == 2 || i == 6 || i == 8)
+			for (int i = 0; i < closed.size(); ++i)
+			{
+				if (closed.at(i) == neighbour)
 				{
-					localDistance = 14;
+					closed.erase(std::remove(closed.begin(), closed.end(), closed.at(i)));
+				}
+			}
+
+			int dstX = abs(current->gameObject->gridPos.x - point->gridPos.x);
+			int dstY = abs(current->gameObject->gridPos.y - point->gridPos.y);
+			int dst;
+			if (dstX > dstY)
+			{
+				dst = 14 * dstY + 10 * (dstX - dstY);
+			}
+			else
+			{
+				dst = 14 * dstX + 10 * (dstY - dstX);
+			}
+
+			int moveCostToNeighbour = current->gScore + dst;
+			if (moveCostToNeighbour < neighbour->gScore || std::find(open.begin(), open.end(), neighbour) == open.begin())
+			{
+				neighbour->gScore = moveCostToNeighbour;
+
+				int dstXGoal = abs(point->gridPos.x - goal->gridPos.x);
+				int dstYGoal = abs(point->gridPos.y - goal->gridPos.y);
+				int dstGoal;
+
+				if (dstXGoal > dstYGoal)
+				{
+					dstGoal = 14 * dstY + 10 * (dstXGoal - dstYGoal);
 				}
 				else
 				{
-					localDistance = 10;
-				}
-				int gScore = current->gScore + localDistance;
-
-				markContinue = false;
-				for (int ii = 0; ii < closed.size(); i++)
-				{
-					if (open[ii]->pos == pos)
-					{
-						markContinue = true;
-						break;
-					}
+					dstGoal = 14 * dstXGoal + 10 * (dstYGoal - dstXGoal);
 				}
 
-				Node* temp;
-				if (!markContinue)
-				{
-					open.push_back(temp = new Node(pos));
-				}
-				else if(gScore >= current->gScore)
-				{
-					continue;
-				}
+				neighbour->hScore = dstGoal;
+				neighbour->parent = current;
 
-				temp->gScore = gScore;
-				temp->parent = current;
-				temp->fScore = gScore + (abs(pos.x - goal->pos.x) + abs(pos.y - goal->pos.y));
+				if (std::find(open.begin(), open.end(), neighbour) == open.end())
+				{
+					open.push_back(neighbour);
+				}
 			}
 		}
 	}
@@ -148,15 +162,8 @@ void Application2D::reconstructPath(Node * fromPoint)
 	Node* currentPoint = fromPoint;
 	while (currentPoint->parent != nullptr)
 	{
-		for (std::list<GameObject*>::iterator it = nodePoints.begin(); it != nodePoints.end(); it++)
-		{
-			if ((*it)->getTransform()->getPosition() == glm::vec2(currentPoint->pos.x * spacing, currentPoint->pos.x * spacing))
-			{
-				(*it)->setTexture(textureManager->getTexture(1));
-				currentPoint = currentPoint->parent;
-				break;
-			}
-		}
+		currentPoint->gameObject->setTexture(textureManager->getTexture(1));
+		currentPoint = currentPoint->parent;
 	}
 }
 
@@ -176,30 +183,10 @@ bool Application2D::update(float deltaTime)
 	if (hasWindowClosed() || isKeyPressed(GLFW_KEY_ESCAPE))
 		return false;
 
-
-	/*if (index == objects.size())
-	{
-		index = 0;
-		textureID++;
-		if (textureID == 3)
-		{
-			textureID = 0;
-		}
-	}
-	int counter = 0;*/
 	for each(GameObject* obj in objects)
 	{
-		/*if (counter == index) 
-		{
-			obj->setTexture(textureManager->getTexture(textureID));
-		}*/
 		obj->update(deltaTime);
-		//counter++;
 	}
-
-	//index++;
-
-	std::cout << deltaTime << "\n";
 
 	return true;
 }

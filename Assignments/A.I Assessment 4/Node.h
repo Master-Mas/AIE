@@ -1,18 +1,21 @@
 #pragma once
-#include <glm/vec2.hpp>
+#include "GridPoint.h"
+
 struct Node
 {
 public:
-	Node(glm::vec2 vec);
+	Node();
+	Node(GridPoint* node);
 	~Node();
 
-public:
-	glm::vec2 pos;
-
-	float gScore = 0;
 	float hScore = 0;
-	float fScore = 0;
+	float gScore = 0;
 
 	Node* parent = nullptr;
+	GridPoint* gameObject = nullptr;
+
+	bool operator==(const Node*);
+
+	int calcFScore();
 };
 

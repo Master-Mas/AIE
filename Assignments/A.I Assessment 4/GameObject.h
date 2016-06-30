@@ -22,6 +22,8 @@ public:
 
 	void setTexture(Texture* texture);
 
+	bool operator==(GameObject* other);
+
 private:
 	Transform transform;
 	Texture * texture = nullptr;

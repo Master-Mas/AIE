@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GridPoint.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="src\BaseApplication.cpp" />
     <ClCompile Include="src\Font.cpp" />
@@ -25,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GridPoint.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="src\BaseApplication.h" />
     <ClInclude Include="src\Font.h" />
