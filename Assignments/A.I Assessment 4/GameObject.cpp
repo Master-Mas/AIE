@@ -52,6 +52,11 @@ void GameObject::setTexture(Texture * texture)
 	this->texture = texture;
 }
 
+Texture* GameObject::getTexture()
+{
+	return texture;
+}
+
 bool GameObject::operator==(GameObject * other)
 {
 	if (transform.getPosition().x == other->getTransform()->getPosition().x && transform.getPosition().y == other->getTransform()->getPosition().y)

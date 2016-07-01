@@ -9,6 +9,7 @@ bool BaseApplication::createWindow(const char* title, int width, int height) {
 	if (glfwInit() == GL_FALSE)
 		return false;
 
+	//glfwGetPrimaryMonitor()
 	m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	if (m_window == nullptr) {
 		glfwTerminate();

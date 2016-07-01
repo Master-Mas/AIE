@@ -14,6 +14,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GridPoint.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="PathFinding.cpp" />
     <ClCompile Include="src\BaseApplication.cpp" />
     <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\gl_core_4_4.c" />
@@ -28,6 +29,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GridPoint.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="PathFinding.h" />
     <ClInclude Include="src\BaseApplication.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\gl_core_4_4.h" />

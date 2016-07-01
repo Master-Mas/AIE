@@ -26,10 +26,14 @@ bool Application2D::startup()
 	m_spriteBatch = new SpriteBatch();
 	textureManager = new TextureManager();
 
-	std::vector<GridPoint*>* currentXRow;
+	xSize = (int)(1280 / spacing);
+	ySize = (int)(720 / spacing);
+
+	pathFinding = new PathFinding(&nodePoints, xSize, ySize);
 
 	srand(time(NULL));
 
+	std::vector<GridPoint*>* currentXRow;
 	for (int i = 0; i < (ySize * xSize); i++)
 	{
 		if (i % xSize == 0)
@@ -42,7 +46,7 @@ bool Application2D::startup()
 		obj->setTexture(textureManager->getTexture(0));
 		obj->getTransform()->setScale(glm::vec2(scale, scale));
 		obj->gridPos = glm::vec2(i % xSize, (int)i / xSize);
-		obj->walkable = rand() % 10 == 0 ? false : true;
+		obj->walkable = rand() % 5 == 0 ? false : true;
 		if (!obj->walkable)
 		{
 			obj->setTexture(textureManager->getTexture(2));
@@ -58,12 +62,15 @@ bool Application2D::startup()
 	std::vector<GridPoint*>* array = nodePoints.find((int)start.y - 1)->second;
 	GridPoint* startNode = array->at((int)start.x - 1);
 	startNode->walkable = true;
-	startNode->setTexture(textureManager->getTexture(1));
+	startNode->setTexture(textureManager->getTexture(4));
+	player = startNode;
 
 	array = nodePoints.find((int)goal.y - 1)->second;
 	GridPoint* goalNode = array->at((int)goal.x - 1);
 	goalNode->walkable = true;
 	goalNode->setTexture(textureManager->getTexture(1));
+	target = goalNode;
+
 	astar(startNode, goalNode);
 
 	return true;
@@ -71,141 +78,109 @@ bool Application2D::startup()
 
 void Application2D::astar(GridPoint* start, GridPoint* goal)
 {
-	std::vector<Node*> closed;
-	std::vector<Node*> open;
-
-	Node*** nodeCalcPoints = new Node**[ySize];
-	for (int i = 0; i < ySize; ++i)
-	{
-		nodeCalcPoints[i] = new Node*[xSize];
-	}
-
-	for (int i = 0; i < ySize; ++i)
-	{
-		for (int ii = 0; ii < xSize; ++ii)
-		{
-			nodeCalcPoints[i][ii] = new Node(nodePoints.find(i)->second->at(ii));
-		}
-	}
-
-	Node* goalNode = nodeCalcPoints[(int)goal->gridPos.y][(int)goal->gridPos.x];
-	open.push_back(nodeCalcPoints[(int)start->gridPos.y][(int)start->gridPos.x]);
-
-	std::cout << "Start Walkable" << open.at(0)->gameObject->walkable << "\n";
-	std::cout << "Start Walkable" << goalNode->gameObject->walkable << "\n";
-
-	while (open.size() > 0)
-	{
-		Node* current = open.at(0);
-		for (int i = 0; i < open.size(); i++) 
-		{
-			std::cout << "IT: " << i << std::endl;
-			if (open.at(i)->calcFScore() < current->calcFScore())
-			{
-				current = open[i];
-			}
-		}
-
-		open.erase(std::remove(open.begin(), open.end(), current));
-		closed.push_back(current);
-
-		if (goalNode == current)
-		{
-			std::cout << "Found Path" << std::endl;
-			reconstructPath(current);
-			std::cout << "Found Path" << std::endl;
-
-			for (int i = 0; i < ySize; ++i)
-			{
-				for (int ii = 0; ii < xSize; ++ii)
-				{
-					delete nodeCalcPoints[i][ii];
-				}
-				delete[] nodeCalcPoints[i];
-			}
-			delete[] nodeCalcPoints;
-
-			return;
-		}
-
-		for (int y = -1; y < 2; y++)
-		{
-			for (int x = -1; x < 2; x++)
-			{
-				/*if (
-					(x == -1 && y == -1) ||
-					(x == -1 && y == 1) ||
-					(x == 1 && y == -1) ||
-					(x == 1 && y == 1)
-					)
-				{
-					continue;
-				}*/
-
-				int yCoord = current->gameObject->gridPos.y + y;
-				int xCoord = current->gameObject->gridPos.x + x;
-
-				if (xCoord <= -1 || xCoord >= xSize || yCoord <= -1 || yCoord >= ySize || (yCoord == 1 && xCoord == 1))
-				{
-					continue;
-				}
-
-				Node* neighbour = nodeCalcPoints[yCoord][xCoord];
-
-				if (!neighbour->gameObject->walkable)
-				{
-					continue;
-				}
-
-				if (std::find(closed.begin(), closed.end(), neighbour) != closed.end())
-				{
-					continue;
-				}
-
-				int moveCostToNeighbour = current->gScore + nodeDistance(current, neighbour);
-				if (moveCostToNeighbour < neighbour->gScore || std::find(open.begin(), open.end(), neighbour) == open.end())
-				{
-					neighbour->gScore = moveCostToNeighbour;
-
-					neighbour->hScore = nodeDistance(neighbour, goalNode);
-					neighbour->parent = current;
-
-					if (std::find(open.begin(), open.end(), neighbour) == open.end())
-					{
-						open.push_back(neighbour);
-					}
-				}
-			}
-		}
-	}
+	reconstructPath(pathFinding->findPath(start, goal));
 }
 
 void Application2D::reconstructPath(Node * fromPoint)
 {
+	if (fromPoint == nullptr)
+	{
+		return;
+	}
 	Node* currentPoint = fromPoint;
 	while (currentPoint->parent != nullptr)
 	{
 		currentPoint->gameObject->setTexture(textureManager->getTexture(1));
 		currentPoint = currentPoint->parent;
+		if (currentPoint->parent != nullptr)
+		{
+			nextPos = currentPoint->gameObject;
+		}
 	}
 }
 
-int Application2D::nodeDistance(Node * start, Node * goal)
+void Application2D::clearPathFinding()
 {
-	int dstX = abs(start->gameObject->gridPos.x - goal->gameObject->gridPos.x);
-	int dstY = abs(start->gameObject->gridPos.y - goal->gameObject->gridPos.y);
-	int dst;
-
-	if (dstX > dstY)
+	for (int i = 0; i < ySize; i++)
 	{
-		dst = 14 * dstY + 10 * (dstX - dstY);
+		for (int ii = 0; ii < xSize; ii++)
+		{
+			GridPoint* location = nodePoints.find(i)->second->at(ii);
+			if (location->walkable && location != player)
+			{
+				location->setTexture(textureManager->getTexture(0));
+			}
+		}
+	}
+}
+
+void Application2D::moveTarget() 
+{
+	glm::vec2 avoid = player->getTransform()->getPosition() - target->getTransform()->getPosition();
+	avoid = glm::normalize(avoid);
+
+	if (avoid.x > -0.5 && avoid.x < 0.5)
+	{
+		avoid.x = 0;
+	} 
+	else if (avoid.x <= -0.5)
+	{
+		avoid.x = -1;
 	}
 	else
 	{
-		dst = 14 * dstX + 10 * (dstY - dstX);
+		avoid.x = 1;
 	}
 
-	return dst;
+	if (avoid.y > -0.5 && avoid.y < 0.5)
+	{
+		avoid.y = 0;
+	}
+	else if (avoid.y <= -0.5)
+	{
+		avoid.y = -1;
+	}
+	else
+	{
+		avoid.y = 1;
+	}
+
+	std::vector<GridPoint*> possibleMoves;
+	for (int y = -1; y < 2; y++)
+	{
+		for (int x = -1; x < 2; x++)
+		{
+			int xCoord = target->gridPos.x + x;
+			int yCoord = target->gridPos.y + y;
+
+			if (xCoord <= -1 || xCoord >= xSize || yCoord <= -1 || yCoord >= ySize || (x == 1 && y == 1))
+			{
+				continue;
+			}
+
+			/*if (x == (int)avoid.x && y == (int)avoid.y)
+			{
+				continue;
+			}*/
+
+			if (nodePoints.find(yCoord)->second->at(xCoord)->walkable && nodePoints.find(yCoord)->second->at(xCoord)->getTexture() == textureManager->getTexture(0))
+			{
+				possibleMoves.push_back(nodePoints.find(yCoord)->second->at(xCoord));
+			}
+		}
+	}
+
+	if (possibleMoves.size() >= 0)
+	{
+		int random = rand();
+		if (random == 0)
+		{
+			return;
+		}
+		target = possibleMoves.at(random % possibleMoves.size());
+		target->setTexture(textureManager->getTexture(1));
+	}
+	
 }
 
 void Application2D::shutdown() 
@@ -216,19 +191,46 @@ void Application2D::shutdown()
 	destroyWindow();
 }
 
-int index = 0;
-int textureID = 1;
+float elapsedTime = 0;
+bool trigger = false;
 
 bool Application2D::update(float deltaTime) 
 {
 	if (hasWindowClosed() || isKeyPressed(GLFW_KEY_ESCAPE))
 		return false;
 
+	elapsedTime += deltaTime;
+
 	for each(GameObject* obj in objects)
 	{
 		obj->update(deltaTime);
 	}
 
+	if (elapsedTime >= 0.25)
+	{
+		elapsedTime = 0;
+		trigger = true;
+		if (nextPos != nullptr)
+		{
+			moveTarget();
+		}
+
+		clearPathFinding();
+		player->setTexture(textureManager->getTexture(0));
+		player = nextPos;
+		player->setTexture(textureManager->getTexture(4));
+		astar(player, target);
+	}
+
+	if (elapsedTime >= 1.0)
+	{
+
+		elapsedTime = 0;
+		trigger = false;
+	}
+
+
+	std::cout << deltaTime << "\n";
 	return true;
 }
 

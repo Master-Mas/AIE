@@ -5,6 +5,8 @@ TextureManager::TextureManager()
 	loadTexture("nodeBlue");
 	loadTexture("nodeGreen");
 	loadTexture("nodeRed");
+	loadTexture("nodeStartEnd");
+	loadTexture("player");
 }
 
 TextureManager::~TextureManager()

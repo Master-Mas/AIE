@@ -34,3 +34,24 @@ int Node::calcFScore()
 {
 	return gScore + hScore;
 }
+
+Node * Node::cloneStack()
+{
+	Node* finalNode = new Node(gameObject);
+
+	Node* settingNode = finalNode;
+	Node* location = this;
+
+	while (true)
+	{
+		if (location->parent == nullptr)
+		{
+			return finalNode;
+		}
+		settingNode->parent = new Node(location->parent->gameObject);
+		settingNode = settingNode->parent;
+		location = location->parent;
+	}
+
+	return nullptr;
+}

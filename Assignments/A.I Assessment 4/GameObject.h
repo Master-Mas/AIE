@@ -22,6 +22,8 @@ public:
 
 	void setTexture(Texture* texture);
 
+	Texture * getTexture();
+
 	bool operator==(GameObject* other);
 
 private:

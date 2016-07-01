@@ -9,7 +9,7 @@
 #include "../GameObject.h"
 #include "../GridPoint.h"
 #include "../Node.h"
-
+#include "../PathFinding.h"
 
 class SpriteBatch;
 class Texture;
@@ -22,6 +22,7 @@ public:
 	virtual ~Application2D();
 
 	virtual bool startup();
+	void moveTarget();
 	virtual void shutdown();
 
 	virtual bool update(float deltaTime);
@@ -38,10 +39,16 @@ private:
 	std::vector<GameObject*> objects;
 	std::map<int, std::vector<GridPoint*>*> nodePoints;
 
-	int xSize = 19;
-	int ySize = 11;
-	int spacing = 64;
-	float scale = 1.0f;
+	int xSize = 0;
+	int ySize = 0;
+	int spacing = 8;
+	float scale = 0.25f;
 
-	int nodeDistance(Node* start, Node* goal);
+	GridPoint* target;
+	GridPoint* player;
+	GridPoint* nextPos;
+
+	PathFinding* pathFinding;
+
+	void clearPathFinding();
 };

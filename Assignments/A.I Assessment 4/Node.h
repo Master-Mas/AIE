@@ -17,5 +17,6 @@ public:
 	bool operator==(const Node*);
 
 	int calcFScore();
+	Node* cloneStack();
 };
 
