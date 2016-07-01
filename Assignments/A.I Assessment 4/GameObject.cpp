@@ -54,7 +54,7 @@ void GameObject::setTexture(Texture * texture)
 
 bool GameObject::operator==(GameObject * other)
 {
-	if (transform.getPosition() == other->getTransform()->getPosition())
+	if (transform.getPosition().x == other->getTransform()->getPosition().x && transform.getPosition().y == other->getTransform()->getPosition().y)
 	{
 		if (color[0] == other->color[0] && color[1] == other->color[1] && color[2] == other->color[2] && color[3] == other->color[3])
 		{

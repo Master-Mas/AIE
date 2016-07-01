@@ -42,4 +42,6 @@ private:
 	int ySize = 11;
 	int spacing = 64;
 	float scale = 1.0f;
+
+	int nodeDistance(Node* start, Node* goal);
 };

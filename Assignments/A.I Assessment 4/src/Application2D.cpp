@@ -28,6 +28,8 @@ bool Application2D::startup()
 
 	std::vector<GridPoint*>* currentXRow;
 
+	srand(time(NULL));
+
 	for (int i = 0; i < (ySize * xSize); i++)
 	{
 		if (i % xSize == 0)
@@ -40,23 +42,28 @@ bool Application2D::startup()
 		obj->setTexture(textureManager->getTexture(0));
 		obj->getTransform()->setScale(glm::vec2(scale, scale));
 		obj->gridPos = glm::vec2(i % xSize, (int)i / xSize);
+		obj->walkable = rand() % 10 == 0 ? false : true;
+		if (!obj->walkable)
+		{
+			obj->setTexture(textureManager->getTexture(2));
+		}
 
 		objects.push_back(obj);
 		currentXRow->push_back(obj);
 	}
-
-	srand(time(NULL));
 
 	glm::vec2 start = glm::vec2((int)(rand() % xSize) + 1, (int)(rand() % ySize) + 1);
 	glm::vec2 goal = glm::vec2((int)(rand() % xSize) + 1, (int)(rand() % ySize) + 1);
 
 	std::vector<GridPoint*>* array = nodePoints.find((int)start.y - 1)->second;
 	GridPoint* startNode = array->at((int)start.x - 1);
+	startNode->walkable = true;
 	startNode->setTexture(textureManager->getTexture(1));
 
 	array = nodePoints.find((int)goal.y - 1)->second;
 	GridPoint* goalNode = array->at((int)goal.x - 1);
-	goalNode->setTexture(textureManager->getTexture(2));
+	goalNode->walkable = true;
+	goalNode->setTexture(textureManager->getTexture(1));
 	astar(startNode, goalNode);
 
 	return true;
@@ -66,14 +73,34 @@ void Application2D::astar(GridPoint* start, GridPoint* goal)
 {
 	std::vector<Node*> closed;
 	std::vector<Node*> open;
-	open.push_back(new Node(start));
+
+	Node*** nodeCalcPoints = new Node**[ySize];
+	for (int i = 0; i < ySize; ++i)
+	{
+		nodeCalcPoints[i] = new Node*[xSize];
+	}
+
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int ii = 0; ii < xSize; ++ii)
+		{
+			nodeCalcPoints[i][ii] = new Node(nodePoints.find(i)->second->at(ii));
+		}
+	}
+
+	Node* goalNode = nodeCalcPoints[(int)goal->gridPos.y][(int)goal->gridPos.x];
+	open.push_back(nodeCalcPoints[(int)start->gridPos.y][(int)start->gridPos.x]);
+
+	std::cout << "Start Walkable" << open.at(0)->gameObject->walkable << "\n";
+	std::cout << "Start Walkable" << goalNode->gameObject->walkable << "\n";
 
 	while (open.size() > 0)
 	{
-		Node* current = open[0];
+		Node* current = open.at(0);
 		for (int i = 0; i < open.size(); i++) 
 		{
-			if (open[i]->calcFScore() < current->calcFScore())
+			std::cout << "IT: " << i << std::endl;
+			if (open.at(i)->calcFScore() < current->calcFScore())
 			{
 				current = open[i];
 			}
@@ -82,75 +109,71 @@ void Application2D::astar(GridPoint* start, GridPoint* goal)
 		open.erase(std::remove(open.begin(), open.end(), current));
 		closed.push_back(current);
 
-		if (goal == current->gameObject)
+		if (goalNode == current)
 		{
 			std::cout << "Found Path" << std::endl;
 			reconstructPath(current);
+			std::cout << "Found Path" << std::endl;
+
+			for (int i = 0; i < ySize; ++i)
+			{
+				for (int ii = 0; ii < xSize; ++ii)
+				{
+					delete nodeCalcPoints[i][ii];
+				}
+				delete[] nodeCalcPoints[i];
+			}
+			delete[] nodeCalcPoints;
+
 			return;
 		}
 
-		for (int i = 0; i < 8; i++)
+		for (int y = -1; y < 2; y++)
 		{
-			int yFinder = current->gameObject->gridPos.y + (i <= 2 ? -1 : i <= 5 ? 0 : 1);
-			int xFinder = current->gameObject->gridPos.x + (i % 3 == 0 ? -1 : i % 3 == 1 ? 0 : 1);
-
-			if (yFinder <= -1 || yFinder >= ySize || xFinder <= -1 || xFinder >= xSize)
+			for (int x = -1; x < 2; x++)
 			{
-				continue;
-			}
-
-			GridPoint* point = nodePoints.find(yFinder)->second->at(xFinder);
-			Node* neighbour = new Node(point);
-			if (!point->walkable)
-			{
-				delete neighbour;
-				continue;
-			}
-
-			for (int i = 0; i < closed.size(); ++i)
-			{
-				if (closed.at(i) == neighbour)
+				/*if (
+					(x == -1 && y == -1) ||
+					(x == -1 && y == 1) ||
+					(x == 1 && y == -1) ||
+					(x == 1 && y == 1)
+					)
 				{
-					closed.erase(std::remove(closed.begin(), closed.end(), closed.at(i)));
-				}
-			}
+					continue;
+				}*/
 
-			int dstX = abs(current->gameObject->gridPos.x - point->gridPos.x);
-			int dstY = abs(current->gameObject->gridPos.y - point->gridPos.y);
-			int dst;
-			if (dstX > dstY)
-			{
-				dst = 14 * dstY + 10 * (dstX - dstY);
-			}
-			else
-			{
-				dst = 14 * dstX + 10 * (dstY - dstX);
-			}
+				int yCoord = current->gameObject->gridPos.y + y;
+				int xCoord = current->gameObject->gridPos.x + x;
 
-			int moveCostToNeighbour = current->gScore + dst;
-			if (moveCostToNeighbour < neighbour->gScore || std::find(open.begin(), open.end(), neighbour) == open.begin())
-			{
-				neighbour->gScore = moveCostToNeighbour;
-
-				int dstXGoal = abs(point->gridPos.x - goal->gridPos.x);
-				int dstYGoal = abs(point->gridPos.y - goal->gridPos.y);
-				int dstGoal;
-
-				if (dstXGoal > dstYGoal)
+				if (xCoord <= -1 || xCoord >= xSize || yCoord <= -1 || yCoord >= ySize || (yCoord == 1 && xCoord == 1))
 				{
-					dstGoal = 14 * dstY + 10 * (dstXGoal - dstYGoal);
-				}
-				else
-				{
-					dstGoal = 14 * dstXGoal + 10 * (dstYGoal - dstXGoal);
+					continue;
 				}
 
-				neighbour->hScore = dstGoal;
-				neighbour->parent = current;
+				Node* neighbour = nodeCalcPoints[yCoord][xCoord];
 
-				if (std::find(open.begin(), open.end(), neighbour) == open.end())
+				if (!neighbour->gameObject->walkable)
 				{
-					open.push_back(neighbour);
+					continue;
+				}
+
+				if (std::find(closed.begin(), closed.end(), neighbour) != closed.end())
+				{
+					continue;
+				}
+
+				int moveCostToNeighbour = current->gScore + nodeDistance(current, neighbour);
+				if (moveCostToNeighbour < neighbour->gScore || std::find(open.begin(), open.end(), neighbour) == open.end())
+				{
+					neighbour->gScore = moveCostToNeighbour;
+
+					neighbour->hScore = nodeDistance(neighbour, goalNode);
+					neighbour->parent = current;
+
+					if (std::find(open.begin(), open.end(), neighbour) == open.end())
+					{
+						open.push_back(neighbour);
+					}
 				}
 			}
 		}
@@ -165,6 +188,24 @@ void Application2D::reconstructPath(Node * fromPoint)
 		currentPoint->gameObject->setTexture(textureManager->getTexture(1));
 		currentPoint = currentPoint->parent;
 	}
+}
+
+int Application2D::nodeDistance(Node * start, Node * goal)
+{
+	int dstX = abs(start->gameObject->gridPos.x - goal->gameObject->gridPos.x);
+	int dstY = abs(start->gameObject->gridPos.y - goal->gameObject->gridPos.y);
+	int dst;
+
+	if (dstX > dstY)
+	{
+		dst = 14 * dstY + 10 * (dstX - dstY);
+	}
+	else
+	{
+		dst = 14 * dstX + 10 * (dstY - dstX);
+	}
+
+	return dst;
 }
 
 void Application2D::shutdown() 
